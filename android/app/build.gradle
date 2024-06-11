@@ -74,9 +74,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.baseapp"
+    namespace "com.agma.whispr"
     defaultConfig {
-        applicationId "com.baseapp"
+        applicationId "com.agma.whispr"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

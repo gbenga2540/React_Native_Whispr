@@ -1,4 +1,4 @@
-package com.baseapp
+package com.agma.whispr
 
 import android.os.Bundle;
 import com.facebook.react.ReactActivity

@@ -1,4 +1,4 @@
-package com.baseapp
+package com.agma.whispr
 
 import android.app.Application
 import com.facebook.react.PackageList
