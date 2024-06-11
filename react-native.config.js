@@ -9,10 +9,10 @@ module.exports = {
   },
   assets: ['./src/assets/fonts'],
   dependencies: {
-    // 'react-native-permissions': {
-    //   platforms: {
-    //     ios: null,
-    //   },
-    // },
+    'react-native-splash-screen': {
+      platforms: {
+        ios: null,
+      },
+    },
   },
 };

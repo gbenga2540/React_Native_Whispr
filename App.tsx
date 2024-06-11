@@ -13,6 +13,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { DEFAULT_CONTAINER } from './src/assets/styles/global';
 import RootStack from 'src/routes/root-stack';
+import SplashScreen from 'react-native-splash-screen';
+import { Platform } from 'react-native';
 
 const App: FunctionComponent = () => {
   useAppState();
@@ -21,7 +23,8 @@ const App: FunctionComponent = () => {
   return (
     <GestureHandlerRootView style={DEFAULT_CONTAINER}>
       <SafeAreaProvider>
-        <NavigationContainer>
+        <NavigationContainer
+          onReady={() => Platform.OS === 'android' && SplashScreen.hide()}>
           <RootStack />
         </NavigationContainer>
       </SafeAreaProvider>
