@@ -1,0 +1,9 @@
+// Install Code Spell Checker Extension
+{
+  // language - current active spelling language
+  "language": "en",
+  // words - list of words to be always considered correct
+  "words": ["Whispr", "whispr"],
+  // flagWords - list of words to be always considered incorrect
+  "flagWords": []
+}
