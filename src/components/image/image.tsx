@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import {
   Image as DefaultImage,
   ImageSourcePropType,
@@ -9,12 +9,10 @@ interface ImageProps extends Partial<ImageStyle> {
   sourceFile: ImageSourcePropType;
 }
 
-const Image: FunctionComponent<ImageProps> = ({ sourceFile, ...props }) => {
+export function Image({ sourceFile, ...props }: ImageProps): React.JSX.Element {
   const IMAGE: ImageStyle = {
     ...props,
   };
 
   return <DefaultImage style={IMAGE} source={sourceFile} />;
-};
-
-export default Image;
+}

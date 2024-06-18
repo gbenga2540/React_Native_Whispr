@@ -1,4 +1,5 @@
 export * from './button/button';
+export * from './divider/divider';
 export * from './icon/icon';
 export * from './image/image';
 export * from './screen/screen';
