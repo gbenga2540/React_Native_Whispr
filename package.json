@@ -14,6 +14,8 @@
     "android": "react-native run-android",
     "android:apk": "cd android && ./gradlew app:assembleDebug",
     "android:apk:prod": "cd android && ./gradlew app:assembleRelease",
+    "android:apk:open": "open android/app/build/outputs/apk/release",
+    "android:apk:prod:full": "yarn clean:android && yarn android:apk:prod && yarn:android:apk:open",
     "android:bundle": "cd android && ./gradlew app:bundleDebug",
     "android:bundle:prod": "cd android && ./gradlew app:bundleRelease",
     "gen-asr": "cd android && ./gradlew signingReport",
