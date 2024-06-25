@@ -3,7 +3,17 @@
   // language - current active spelling language
   "language": "en",
   // words - list of words to be always considered correct
-  "words": ["Whispr", "whispr"],
+  "words": [
+    "whispr",
+    "killall",
+    "gradlew",
+    "xcodebuild",
+    "xcworkspace",
+    "codegen",
+    "reduxjs",
+    "jsbundle",
+    "deintegrate"
+  ],
   // flagWords - list of words to be always considered incorrect
   "flagWords": []
 }
