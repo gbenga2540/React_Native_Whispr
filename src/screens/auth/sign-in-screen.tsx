@@ -1,18 +1,59 @@
 import { useNavigation } from '@react-navigation/native';
-import React, { FunctionComponent } from 'react';
-import { Button, Screen, Text } from 'src/components';
+import React, { FunctionComponent, useCallback, useState } from 'react';
+import { TextStyle } from 'react-native';
+import { fonts } from 'src/assets/fonts/fonts';
+import { Button, Screen, Text, TextField } from 'src/components';
+import { LoginUserRequest } from 'src/domain/auth';
+import { errorToast, successToast } from 'src/helpers';
+import validator from 'validator';
 
 const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
 
-  const navToHomeScreen = () => {
+  const [loginData, setLoginData] = useState<LoginUserRequest>({
+    email: '',
+    password: '',
+  });
+
+  const handleInputChange = (key: keyof LoginUserRequest, val: string) => {
+    setLoginData(prev => ({
+      ...prev,
+      [key]: val,
+    }));
+  };
+
+  const loginUser = useCallback(() => {
+    if (!validator.isEmail(loginData.email)) {
+      errorToast({
+        message: 'Invalid Email!',
+      });
+      return;
+    }
+
+    if (!loginData.password) {
+      errorToast({
+        message: 'Invalid Password!',
+      });
+      return;
+    }
+
+    successToast({
+      message: 'User Logged in successfully logic!',
+    });
+
+    // Run SignUp Logic
     navigation.navigate('AppStack', {
       screen: 'HomeStack',
       params: {
         screen: 'HomeScreen',
       },
     });
-  };
+
+    setLoginData({
+      email: '',
+      password: '',
+    });
+  }, [loginData, navigation]);
 
   const navToSignUpScreen = () => {
     navigation.navigate('AuthStack', {
@@ -21,18 +62,66 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   return (
-    <Screen preset="fixed" baseAllowance={10}>
-      <Text text="SignIn Screen" marginTop={20} fontSize={40} />
+    <Screen preset="scroll" baseAllowance={200}>
+      <Text
+        text="Welcome Back!"
+        marginTop={40}
+        marginBottom={25}
+        fontSize={28}
+        fontFamily={fonts.primaryFont_700}
+      />
+
+      <Text
+        text="Email"
+        marginBottom={7}
+        fontSize={15}
+        fontFamily={fonts.primaryFont_500}
+      />
+      <TextField
+        marginBottom={15}
+        value={loginData.email}
+        setValue={text => handleInputChange('email', text as string)}
+        placeholder="johndoe@gmail.com"
+        autoFocus={true}
+      />
+
+      <Text
+        text="Password"
+        marginBottom={7}
+        fontSize={15}
+        fontFamily={fonts.primaryFont_500}
+      />
+      <TextField
+        marginBottom={15}
+        value={loginData.password}
+        setValue={text => handleInputChange('password', text as string)}
+        placeholder="********"
+        secureTextEntry
+        isPassword
+      />
+
       <Button
-        text="Sign Up"
+        text="Don't have an account?"
         preset="link"
         marginLeft={'auto'}
-        marginTop={'auto'}
+        marginTop={15}
+        marginBottom={3}
         onPress={navToSignUpScreen}
+        textStyle={LINK_TEXT}
       />
-      <Button text="Home Screen" marginTop={20} onPress={navToHomeScreen} />
+
+      <Button
+        text="Login"
+        marginTop={8}
+        onPress={loginUser}
+        disabled={!(loginData.email && loginData.password)}
+      />
     </Screen>
   );
 };
 
 export default SignInScreen;
+
+const LINK_TEXT: TextStyle = {
+  fontSize: 13,
+};

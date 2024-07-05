@@ -3,10 +3,14 @@ export interface LoginUserRequest {
   email: string;
   password: string;
 }
-export interface RegisterRequest {
+export interface RegisterUserRequest {
   email: string;
   password: string;
-  username: string;
+  user_name: string;
+  full_name: string;
+  phone_number: string;
+  bio: string;
+  profile_picture?: File;
 }
 
 // Response

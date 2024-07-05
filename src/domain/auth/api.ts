@@ -1,8 +1,8 @@
 import instance from '../../configs/axios';
-import { AuthResponse, LoginUserRequest, RegisterRequest } from './types';
+import { AuthResponse, LoginUserRequest, RegisterUserRequest } from './types';
 
 export async function registerUser(
-  payload: RegisterRequest,
+  payload: RegisterUserRequest,
 ): Promise<AuthResponse> {
   const response = await instance.post('/register', payload);
   return response.data;
