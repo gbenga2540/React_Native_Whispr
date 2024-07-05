@@ -15,20 +15,23 @@ import { DEFAULT_CONTAINER } from './src/assets/styles/global';
 import RootStack from 'src/routes/root-stack';
 import SplashScreen from 'react-native-splash-screen';
 import { Platform } from 'react-native';
+import { CustomThemeProvider } from 'src/context/theme/theme';
 
 const App: FunctionComponent = () => {
   useAppState();
   useOnlineManager();
 
   return (
-    <GestureHandlerRootView style={DEFAULT_CONTAINER}>
-      <SafeAreaProvider>
-        <NavigationContainer
-          onReady={() => Platform.OS === 'android' && SplashScreen.hide()}>
-          <RootStack />
-        </NavigationContainer>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <CustomThemeProvider>
+      <GestureHandlerRootView style={DEFAULT_CONTAINER}>
+        <SafeAreaProvider>
+          <NavigationContainer
+            onReady={() => Platform.OS === 'android' && SplashScreen.hide()}>
+            <RootStack />
+          </NavigationContainer>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </CustomThemeProvider>
   );
 };
 

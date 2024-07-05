@@ -7,9 +7,9 @@ import {
   View,
   ViewStyle,
 } from 'react-native';
-import { colors } from 'src/design-system';
 import { OTPFieldProps } from './otp-field.props';
 import { fonts } from 'src/assets/fonts/fonts';
+import { useCustomTheme } from 'src/context/theme/interfaces';
 
 const defaultHeight = 50;
 export function OTPField({
@@ -21,6 +21,8 @@ export function OTPField({
   focusColor,
   ...props
 }: OTPFieldProps): React.JSX.Element {
+  const { colors } = useCustomTheme();
+
   const inputRefs = useRef<(TextInput | null)[]>([]);
   const [currentInput, setCurrentInput] = useState<number>(0);
 

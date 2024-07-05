@@ -1,6 +1,6 @@
 import { ViewStyle, TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
-import { colors, getComputedWidth } from 'src/design-system';
+import { IColors, getComputedWidth } from 'src/design-system';
 
 /**
  * All Buttons will start off looking like this.
@@ -25,46 +25,54 @@ type buttonPresetsType = 'primary' | 'secondary' | 'link';
 /**
  * All the variations of text styling within the app.
  */
-export const buttonPresets: Record<buttonPresetsType, ViewStyle> = {
-  /**
-   * A smaller piece of secondary information.
-   */
-  primary: { ...BASE_VIEW, backgroundColor: colors.primary } as ViewStyle,
+export const buttonPresets: (
+  colors: IColors,
+) => Record<buttonPresetsType, ViewStyle> = colors => {
+  return {
+    /**
+     * A smaller piece of secondary information.
+     */
+    primary: { ...BASE_VIEW, backgroundColor: colors.primary } as ViewStyle,
 
-  secondary: {
-    ...BASE_VIEW,
-    backgroundColor: colors.secondary,
-  } as ViewStyle,
+    secondary: {
+      ...BASE_VIEW,
+      backgroundColor: colors.secondary,
+    } as ViewStyle,
 
-  /**
-   * A button without extras.
-   */
-  link: {
-    ...BASE_VIEW,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    borderRadius: 0,
-    height: 'auto',
-  } as ViewStyle,
+    /**
+     * A button without extras.
+     */
+    link: {
+      ...BASE_VIEW,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+      borderRadius: 0,
+      height: 'auto',
+    } as ViewStyle,
+  };
 };
 
-export const textPresets: Record<ButtonPresetNames, TextStyle> = {
-  primary: {
-    ...BASE_TEXT,
-    color: colors.white,
-  } as TextStyle,
+export const textPresets: (
+  colors: IColors,
+) => Record<buttonPresetsType, TextStyle> = colors => {
+  return {
+    primary: {
+      ...BASE_TEXT,
+      color: colors.white,
+    } as TextStyle,
 
-  secondary: {
-    ...BASE_TEXT,
-    color: colors.white,
-  } as TextStyle,
+    secondary: {
+      ...BASE_TEXT,
+      color: colors.white,
+    } as TextStyle,
 
-  link: {
-    ...BASE_TEXT,
-    color: colors.linkText,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-  } as TextStyle,
+    link: {
+      ...BASE_TEXT,
+      color: colors.linkText,
+      paddingHorizontal: 0,
+      paddingVertical: 0,
+    } as TextStyle,
+  };
 };
 
 /**

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { TextInput, TextStyle, View, ViewStyle } from 'react-native';
-import { colors } from 'src/design-system';
 import { TextFieldProps } from './text-field.props';
 import { Icon } from '../icon/icon';
 import { Button } from '../button/button';
 import { fonts } from 'src/assets/fonts/fonts';
+import { useCustomTheme } from 'src/context/theme/interfaces';
 
 const defaultHeight = 53;
 export function TextField({
@@ -17,6 +17,8 @@ export function TextField({
   editable = true,
   ...props
 }: TextFieldProps): React.JSX.Element {
+  const { colors } = useCustomTheme();
+
   const [showPwd, setShowPwd] = useState<boolean>(false);
 
   const CONTAINER: ViewStyle = {
@@ -58,6 +60,8 @@ export function TextField({
         onFocus={props.onFocus}
         autoCapitalize={props.autoCapitalize}
         autoCorrect={props.autoCorrect}
+        onBlur={props.onBlur}
+        blurOnSubmit={props.blurOnSubmit}
         inputMode={props.inputMode}
         autoFocus={props.autoFocus}
         editable={editable}

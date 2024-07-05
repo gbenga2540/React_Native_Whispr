@@ -1,8 +1,8 @@
 import React from 'react';
 import { ActivityIndicator } from 'react-native';
-import { colors } from 'src/design-system';
 import { Screen, Text, View } from 'src/components';
 import { LoadingScreenProps } from './loading-screen.props';
+import { useCustomTheme } from 'src/context/theme/interfaces';
 
 export function LoadingScreen({
   hide,
@@ -10,6 +10,8 @@ export function LoadingScreen({
   textStyle,
   ...props
 }: LoadingScreenProps): React.JSX.Element | null {
+  const { colors } = useCustomTheme();
+
   if (hide) {
     return null;
   }

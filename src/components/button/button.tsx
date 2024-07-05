@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { buttonPresets, textPresets } from './button.presets';
 import { ButtonProps } from './button.props';
-import { colors } from 'src/design-system';
+import { useCustomTheme } from 'src/context/theme/interfaces';
 
 /**
  * For your text displaying needs.
@@ -17,6 +17,8 @@ import { colors } from 'src/design-system';
  * This component is a HOC over the built-in React Native one.
  */
 export function Button(props: ButtonProps): React.JSX.Element {
+  const { colors } = useCustomTheme();
+
   const {
     preset = 'primary',
     text,
@@ -30,12 +32,12 @@ export function Button(props: ButtonProps): React.JSX.Element {
     props.disabled || isLoading ? { opacity: 0.3 } : {};
 
   const textStyles: StyleProp<TextStyle>[] = [
-    textPresets[preset],
+    textPresets(colors)[preset],
     textStyleOverride,
   ];
 
   const buttonStyles: StyleProp<ViewStyle>[] = [
-    buttonPresets[preset],
+    buttonPresets(colors)[preset],
     { ...rest },
     disabledStyle,
   ];
