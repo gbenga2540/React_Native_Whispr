@@ -39,26 +39,19 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
       return;
     }
 
+    //TODO: Run SignIn Logic
     successToast({
       message: 'User Logged in successfully logic!',
     });
-
-    //TODO: Run SignIn Logic
     setUser({
       id: 'test',
-    });
-    navigation.navigate('AppStack', {
-      screen: 'HomeStack',
-      params: {
-        screen: 'HomeScreen',
-      },
     });
 
     setLoginData({
       email: '',
       password: '',
     });
-  }, [loginData, navigation, setUser]);
+  }, [loginData, setUser]);
 
   const navToSignUpScreen = () => {
     navigation.navigate('AuthStack', {

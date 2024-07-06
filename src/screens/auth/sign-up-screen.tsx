@@ -55,19 +55,12 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       return;
     }
 
+    //TODO: Run SignUp Logic
     successToast({
       message: 'User Logged in successfully!',
     });
-
-    //TODO: Run SignUp Logic
     setUser({
       id: 'test',
-    });
-    navigation.navigate('AppStack', {
-      screen: 'HomeStack',
-      params: {
-        screen: 'HomeScreen',
-      },
     });
 
     setRegisterData({
@@ -79,7 +72,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       password: '',
       confirm_password: '',
     });
-  }, [registerData, navigation, setUser]);
+  }, [registerData, setUser]);
 
   const navToSignInScreen = () => {
     navigation.navigate('AuthStack', {
