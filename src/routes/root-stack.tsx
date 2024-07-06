@@ -3,11 +3,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import AuthStack from './main/auth-stack';
 import AppStack from './main/app-stack';
+import { useAuth } from 'src/context/auth/interfaces';
 
 const Root = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack(): React.JSX.Element | null {
-  const authStatus: boolean = false;
+  const { user } = useAuth();
+  const authStatus: boolean = user !== null;
 
   return (
     <Root.Navigator
@@ -15,14 +17,11 @@ export default function RootStack(): React.JSX.Element | null {
       screenOptions={{
         headerShown: false,
       }}>
-      {/* Re-enable the below when authStatus is dynamic */}
-      {/* {authStatus ? (
+      {authStatus ? (
         <Root.Screen name="AppStack" component={AppStack} />
       ) : (
         <Root.Screen name="AuthStack" component={AuthStack} />
-      )} */}
-      <Root.Screen name="AppStack" component={AppStack} />
-      <Root.Screen name="AuthStack" component={AuthStack} />
+      )}
     </Root.Navigator>
   );
 }

@@ -3,12 +3,14 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import { Button, Screen, Text, TextField } from 'src/components';
+import { useAuth } from 'src/context/auth/interfaces';
 import { LoginUserRequest } from 'src/domain/auth';
 import { errorToast, successToast } from 'src/helpers';
 import validator from 'validator';
 
 const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
+  const { setUser } = useAuth();
 
   const [loginData, setLoginData] = useState<LoginUserRequest>({
     email: '',
@@ -41,7 +43,10 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
       message: 'User Logged in successfully logic!',
     });
 
-    // Run SignUp Logic
+    //TODO: Run SignIn Logic
+    setUser({
+      id: 'test',
+    });
     navigation.navigate('AppStack', {
       screen: 'HomeStack',
       params: {
@@ -53,7 +58,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
       email: '',
       password: '',
     });
-  }, [loginData, navigation]);
+  }, [loginData, navigation, setUser]);
 
   const navToSignUpScreen = () => {
     navigation.navigate('AuthStack', {
@@ -62,7 +67,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   return (
-    <Screen preset="scroll" baseAllowance={200}>
+    <Screen preset="scroll" baseAllowance={300}>
       <Text
         text="Welcome Back!"
         marginTop={40}
@@ -82,7 +87,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         value={loginData.email}
         setValue={text => handleInputChange('email', text as string)}
         placeholder="johndoe@gmail.com"
-        autoFocus={true}
+        // autoFocus={true}
       />
 
       <Text

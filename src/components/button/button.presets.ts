@@ -21,7 +21,7 @@ const BASE_TEXT: TextStyle = {
   fontFamily: fonts.primaryFont_400,
 };
 
-type buttonPresetsType = 'primary' | 'secondary' | 'link';
+export type buttonPresetsType = 'primary' | 'secondary' | 'link';
 /**
  * All the variations of text styling within the app.
  */

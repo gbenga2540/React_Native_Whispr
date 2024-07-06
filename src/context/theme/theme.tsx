@@ -8,7 +8,7 @@ import { Appearance, ColorSchemeName } from 'react-native';
 import { IColors, colors } from '../../design-system/colors';
 
 export const CustomThemeProvider: ICustomThemeProvider =
-  function ThemeConfigProvider({ children }) {
+  function CustomThemeProvider({ children }) {
     const [customTheme, setCustomTheme] = useState<ICustomTheme>('system');
     const [systemScheme, setSystemScheme] = useState<ColorSchemeName>(
       Appearance.getColorScheme(),

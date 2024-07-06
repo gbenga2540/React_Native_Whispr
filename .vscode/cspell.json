@@ -13,7 +13,8 @@
     "reduxjs",
     "jsbundle",
     "deintegrate",
-    "Lato"
+    "Lato",
+    "johndoe"
   ],
   // flagWords - list of words to be always considered incorrect
   "flagWords": []

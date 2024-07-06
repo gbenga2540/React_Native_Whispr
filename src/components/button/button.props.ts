@@ -4,7 +4,7 @@ import {
   TouchableOpacityProps,
   ViewStyle,
 } from 'react-native';
-import { ButtonPresetNames } from './button.presets';
+import { buttonPresetsType } from './button.presets';
 
 /**
  * Button Props with an optional style override useful for the buttons
@@ -23,7 +23,7 @@ export interface ButtonProps extends TouchableOpacityProps, Partial<ViewStyle> {
   /**
    * One of the different types of text presets.
    */
-  preset?: ButtonPresetNames;
+  preset?: buttonPresetsType;
 
   /**
    * Optional component wrapped with the button
