@@ -44,7 +44,10 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
       message: 'User Logged in successfully logic!',
     });
     setUser({
-      id: 'test',
+      token: 'test',
+      user: {
+        user_id: 'testID',
+      },
     });
 
     setLoginData({

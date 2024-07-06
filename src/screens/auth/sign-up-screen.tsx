@@ -60,7 +60,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       message: 'User Logged in successfully!',
     });
     setUser({
-      id: 'test',
+      token: 'test',
+      user: {
+        user_id: 'testID',
+      },
     });
 
     setRegisterData({

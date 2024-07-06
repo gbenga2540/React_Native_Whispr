@@ -9,7 +9,7 @@ const Root = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack(): React.JSX.Element | null {
   const { user } = useAuth();
-  const authStatus: boolean = user !== null;
+  const authStatus: boolean = Boolean(user?.user?.user_id);
 
   return (
     <Root.Navigator
