@@ -17,23 +17,30 @@ import SplashScreen from 'react-native-splash-screen';
 import { Platform } from 'react-native';
 import { CustomThemeProvider } from 'src/context/theme/theme';
 import { AuthProvider } from 'src/context/auth/auth';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const App: FunctionComponent = () => {
+  const queryClient = new QueryClient();
+
   useAppState();
   useOnlineManager();
 
   return (
     <CustomThemeProvider>
-      <AuthProvider>
-        <GestureHandlerRootView style={DEFAULT_CONTAINER}>
-          <SafeAreaProvider>
-            <NavigationContainer
-              onReady={() => Platform.OS === 'android' && SplashScreen.hide()}>
-              <RootStack />
-            </NavigationContainer>
-          </SafeAreaProvider>
-        </GestureHandlerRootView>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <GestureHandlerRootView style={DEFAULT_CONTAINER}>
+            <SafeAreaProvider>
+              <NavigationContainer
+                onReady={() =>
+                  Platform.OS === 'android' && SplashScreen.hide()
+                }>
+                <RootStack />
+              </NavigationContainer>
+            </SafeAreaProvider>
+          </GestureHandlerRootView>
+        </AuthProvider>
+      </QueryClientProvider>
     </CustomThemeProvider>
   );
 };

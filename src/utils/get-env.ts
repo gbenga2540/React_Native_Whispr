@@ -1,5 +1,7 @@
-const getEnv = <T>(name: string): T => {
-  const value = process.env[name];
+import { API_BASE_URL_DEV, API_BASE_URL_PROD } from '@env';
+
+const getEnv = <T>(name: any): T => {
+  const value = name;
   if (value === undefined || value === null) {
     throw new Error(`Environment variable ${name} is required!`);
   }
@@ -8,6 +10,6 @@ const getEnv = <T>(name: string): T => {
 
 export const EnvConfig = {
   baseURL: __DEV__
-    ? getEnv<string>('API_BASE_URL_DEV')
-    : getEnv<string>('API_BASE_URL_PROD'),
+    ? getEnv<string>(API_BASE_URL_DEV)
+    : getEnv<string>(API_BASE_URL_PROD),
 };

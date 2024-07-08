@@ -16,6 +16,15 @@ export interface RegisterUserRequest {
 // Response
 export interface AuthResponse
   extends ServerResponse<{
-    user_id: string;
-    token: string;
+    token?: string;
+    user?: {
+      email?: string;
+      user_id?: string;
+      user_name?: string;
+      full_name?: string;
+      phone_number?: string;
+      bio?: string;
+      joined?: string;
+      profile_picture?: string;
+    };
   }> {}

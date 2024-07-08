@@ -1,16 +1,21 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AuthContext, IAuthProvider } from './interfaces';
 
 export const AuthProvider: IAuthProvider = function AuthProvider({ children }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [render, setRender] = useState<boolean>(false);
+  const [auth, setAuth] = useState<Auth | null>(null);
+
+  useEffect(() => {
+    setRender(true);
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
-        user,
-        setUser,
+        auth,
+        setAuth,
       }}>
-      {children}
+      {render ? children : null}
     </AuthContext.Provider>
   );
 };

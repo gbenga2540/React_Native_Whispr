@@ -1,4 +1,4 @@
-interface User {
+interface Auth {
   token?: string;
   user?: {
     email?: string;

@@ -14,7 +14,8 @@
     "jsbundle",
     "deintegrate",
     "Lato",
-    "johndoe"
+    "johndoe",
+    "zustand"
   ],
   // flagWords - list of words to be always considered incorrect
   "flagWords": []
