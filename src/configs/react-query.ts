@@ -27,6 +27,10 @@ export const queryClient = new QueryClient({
 export function handleErrors(error: AxiosError) {
   const message = extractErrorMessage(error);
 
+  if (error.status === 401) {
+    //TODO: Logout
+  }
+
   errorToast({
     title: 'Error',
     message: message,

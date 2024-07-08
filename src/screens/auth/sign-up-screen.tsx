@@ -3,14 +3,12 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import { Button, Screen, Text, TextField } from 'src/components';
-import { useAuth } from 'src/context/auth/interfaces';
 import { RegisterUserRequest } from 'src/domain/auth';
 import { errorToast, successToast } from 'src/helpers';
 import validator from 'validator';
 
 const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
-  const { setAuth } = useAuth();
 
   interface IRegisterUserRequest extends RegisterUserRequest {
     confirm_password: string;
@@ -59,12 +57,6 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
     successToast({
       message: 'Auth Logged in successfully!',
     });
-    setAuth({
-      token: 'test',
-      user: {
-        user_id: 'testID',
-      },
-    });
 
     setRegisterData({
       email: '',
@@ -75,7 +67,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       password: '',
       confirm_password: '',
     });
-  }, [registerData, setAuth]);
+  }, [registerData]);
 
   const navToSignInScreen = () => {
     navigation.navigate('AuthStack', {

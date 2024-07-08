@@ -15,7 +15,7 @@ export const colors: { light: IColors; dark: IColors } = {
   light: {
     background: '#fafafa',
     primary: '#f06c62',
-    secondary: '#b800b8',
+    secondary: '#0cad07',
     grayText: '#3f3f3f',
     white: '#ffffff',
     black: '#000000',
@@ -27,7 +27,7 @@ export const colors: { light: IColors; dark: IColors } = {
   dark: {
     background: '#0f0f0f',
     primary: '#f06c62',
-    secondary: '#b800b8',
+    secondary: '#0cad07',
     grayText: '#fafafa',
     white: '#ffffff',
     black: '#000000',

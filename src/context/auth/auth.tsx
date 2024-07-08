@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { AuthContext, IAuthProvider } from './interfaces';
+import { useAuthStore } from 'src/store/auth/auth.store';
 
 export const AuthProvider: IAuthProvider = function AuthProvider({ children }) {
-  const [render, setRender] = useState<boolean>(false);
+  const authStat = useAuthStore().auth;
+
   const [auth, setAuth] = useState<Auth | null>(null);
 
   useEffect(() => {
-    setRender(true);
-  }, []);
+    setAuth(authStat);
+  }, [authStat]);
 
   return (
     <AuthContext.Provider
@@ -15,7 +17,7 @@ export const AuthProvider: IAuthProvider = function AuthProvider({ children }) {
         auth,
         setAuth,
       }}>
-      {render ? children : null}
+      {children}
     </AuthContext.Provider>
   );
 };

@@ -3,15 +3,15 @@ import React, { FunctionComponent, useCallback, useState } from 'react';
 import { TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import { Button, Screen, Text, TextField } from 'src/components';
-import { useAuth } from 'src/context/auth/interfaces';
 import { LoginUserRequest, useLoginUser } from 'src/domain/auth';
 import { errorToast, successToast } from 'src/helpers';
+import { useAuthStore } from 'src/store/auth/auth.store';
 import validator from 'validator';
 
 const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
-  const { setAuth } = useAuth();
-  const { mutate } = useLoginUser();
+  const { mutate, isLoading } = useLoginUser();
+  const updateAuth = useAuthStore().updateAuth;
 
   const [loginData, setLoginData] = useState<LoginUserRequest>({
     email: '',
@@ -54,7 +54,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         },
         onSuccess(data, _variables, _context) {
           if (data.data?.token) {
-            setAuth(data.data);
+            updateAuth(data.data);
             successToast({
               message: 'Auth Logged in successfully logic!',
             });
@@ -71,7 +71,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         },
       },
     );
-  }, [loginData, setAuth, mutate]);
+  }, [loginData, mutate, updateAuth]);
 
   const navToSignUpScreen = () => {
     navigation.navigate('AuthStack', {
@@ -134,6 +134,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         text="Login"
         marginTop={8}
         onPress={loginUser}
+        isLoading={isLoading}
         disabled={!(loginData.email && loginData.password)}
       />
     </Screen>
