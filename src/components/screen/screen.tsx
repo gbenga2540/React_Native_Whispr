@@ -85,7 +85,7 @@ function ScreenWithScrolling(props: ScreenProps) {
   };
 
   const baseAllowanceStyle: ViewStyle = {
-    marginBottom: (props.baseAllowance || 20) + (isIos ? 20 : 0),
+    marginBottom: (props.baseAllowance || 350) + (isIos ? 20 : 0),
   };
 
   return (
@@ -110,6 +110,7 @@ function ScreenWithScrolling(props: ScreenProps) {
           contentContainerStyle={[preset.inner, screenStyle]}
           showsVerticalScrollIndicator={false}
           showsHorizontalScrollIndicator={false}
+          nestedScrollEnabled
           keyboardShouldPersistTaps={
             props.keyboardShouldPersistTaps || 'handled'
           }

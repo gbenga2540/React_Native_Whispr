@@ -6,7 +6,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const clearAuth = useAuthStore().clearAuth;
 
   return (
-    <Screen baseAllowance={10}>
+    <Screen>
       <Text text="Home Screen" marginTop={20} />
       <Button
         text="Log Out"
