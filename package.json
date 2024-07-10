@@ -15,7 +15,7 @@
     "android:apk": "cd android && ./gradlew app:assembleDebug",
     "android:apk:prod": "cd android && ./gradlew app:assembleRelease",
     "android:apk:open": "open android/app/build/outputs/apk/release",
-    "android:apk:prod:open": "yarn clean:android && yarn android:apk:prod && yarn android:apk:open && yarn clean:android && yarn kill:java",
+    "android:apk:prod:open": "yarn clean:android && yarn android:apk:prod && yarn android:apk:open && yarn kill:java",
     "android:bundle": "cd android && ./gradlew app:bundleDebug",
     "android:bundle:prod": "cd android && ./gradlew app:bundleRelease",
     "gen-asr": "cd android && ./gradlew signingReport",
