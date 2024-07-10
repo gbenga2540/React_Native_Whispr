@@ -15,7 +15,8 @@
     "deintegrate",
     "Lato",
     "johndoe",
-    "zustand"
+    "zustand",
+    "pressable"
   ],
   // flagWords - list of words to be always considered incorrect
   "flagWords": []
