@@ -16,7 +16,10 @@
     "Lato",
     "johndoe",
     "zustand",
-    "pressable"
+    "pressable",
+    "baseapp",
+    "gbenga",
+    "netinfo"
   ],
   // flagWords - list of words to be always considered incorrect
   "flagWords": []
