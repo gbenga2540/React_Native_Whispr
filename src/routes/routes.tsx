@@ -28,15 +28,9 @@ export const authRoutes: Array<Route<AuthStackParamList>> = [
   { name: 'SignUpScreen', component: SignUpScreen },
 ];
 export const appRoutes: Array<Route<AppStackParamList>> = [
-  {
-    name: 'HomeStack',
-    component: HomeStack,
-  },
+  { name: 'HomeStack', component: HomeStack },
 ];
 
 export const homeRoutes: Array<Route<HomeStackParamsList>> = [
-  {
-    name: 'HomeScreen',
-    component: HomeScreen,
-  },
+  { name: 'HomeScreen', component: HomeScreen },
 ];
