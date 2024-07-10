@@ -5,7 +5,7 @@ import { getComputedWidth } from 'src/design-system';
 import { fonts } from 'src/assets/fonts/fonts';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 
-export function Text({ text, ...props }: TextProps): React.JSX.Element {
+export function Text({ text, limit, ...props }: TextProps): React.JSX.Element {
   const { colors } = useCustomTheme();
 
   const TEXT: TextStyle = {
@@ -15,5 +15,13 @@ export function Text({ text, ...props }: TextProps): React.JSX.Element {
     fontSize: getComputedWidth(props.fontSize || 16),
   };
 
-  return <DefaultText style={TEXT}>{text}</DefaultText>;
+  return (
+    <DefaultText style={TEXT}>
+      {limit !== undefined
+        ? text?.length > limit
+          ? `${text.slice(0, limit)}...`
+          : text
+        : text}
+    </DefaultText>
+  );
 }
