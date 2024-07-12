@@ -23,6 +23,7 @@ export function LoadingScreen({
           <Text
             text={loadText}
             marginBottom={4}
+            textAlign="center"
             color={colors.linkText}
             {...textStyle}
           />
