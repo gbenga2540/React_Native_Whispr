@@ -12,7 +12,7 @@ export interface OTPFieldProps extends DefaultTIProps, Partial<ViewStyle> {
   /**
    * number of text-field inputs
    */
-  otpCount: number;
+  otpCount?: number;
 
   /**
    * value of the text
