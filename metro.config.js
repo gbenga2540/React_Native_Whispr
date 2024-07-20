@@ -17,6 +17,9 @@ const config = {
     assetExts: assetExts.filter(ext => ext !== 'svg'),
     sourceExts: [...sourceExts, 'svg'],
   },
+  server: {
+    port: 8081,
+  },
 };
 
 module.exports = mergeConfig(defaultConfig, config);
