@@ -33,6 +33,14 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string/>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs to access your camera to take a picture.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Grant $(PRODUCT_NAME) the permission to use your microphone.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs to access your gallery to select a photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) needs to access your gallery to select a photo.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen.storyboard</string>
 	<key>UIRequiredDeviceCapabilities</key>

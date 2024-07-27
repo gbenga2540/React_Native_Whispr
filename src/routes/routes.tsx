@@ -13,6 +13,7 @@ import HomeStack from './stacks/home-stack';
 // Screens for the Auth Stack
 import SignInScreen from 'src/screens/auth/sign-in-screen';
 import SignUpScreen from 'src/screens/auth/sign-up-screen';
+import OTPScreen from 'src/screens/auth/otp-screen';
 
 // Screens for the Home Stack
 import HomeScreen from 'src/screens/home/home-screen';
@@ -26,6 +27,7 @@ interface Route<List extends Record<string, object | undefined>> {
 export const authRoutes: Array<Route<AuthStackParamList>> = [
   { name: 'SignInScreen', component: SignInScreen },
   { name: 'SignUpScreen', component: SignUpScreen },
+  { name: 'OTPScreen', component: OTPScreen },
 ];
 export const appRoutes: Array<Route<AppStackParamList>> = [
   { name: 'HomeStack', component: HomeStack },

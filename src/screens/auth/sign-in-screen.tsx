@@ -1,6 +1,5 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useState } from 'react';
-import { TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import { Button, Screen, Text, TextField } from 'src/components';
 import { LoginUserRequest, useLoginUser } from 'src/domain/auth';
@@ -10,8 +9,9 @@ import validator from 'validator';
 
 const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
-  const { mutate, isLoading } = useLoginUser();
   const updateAuth = useAuthStore().updateAuth;
+
+  const { mutate: loginMutate, isLoading } = useLoginUser();
 
   const [loginData, setLoginData] = useState<LoginUserRequest>({
     email: '',
@@ -26,52 +26,56 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   const loginUser = useCallback(() => {
-    if (!validator.isEmail(loginData.email)) {
-      errorToast({
-        message: 'Invalid Email!',
-      });
-      return;
-    }
+    try {
+      if (!validator.isEmail(loginData.email.trim())) {
+        errorToast({
+          message: 'Invalid Email!',
+        });
+        return;
+      }
 
-    if (!loginData.password) {
-      errorToast({
-        message: 'Invalid Password!',
-      });
-      return;
-    }
+      if (validator.isEmpty(loginData.password.trim())) {
+        errorToast({
+          message: 'Invalid Password!',
+        });
+        return;
+      }
 
-    mutate(
-      {
-        email: loginData.email,
-        password: loginData.password,
-      },
-      {
-        onError(error, _variables, _context) {
-          errorToast({
-            title: 'An Error Occurred!',
-            message: String(error),
-          });
+      loginMutate(
+        {
+          email: loginData.email.trim(),
+          password: loginData.password.trim(),
         },
-        onSuccess(data, _variables, _context) {
-          if (data.data?.token) {
-            updateAuth(data.data);
-            successToast({
-              message: 'Auth Logged in successfully logic!',
-            });
-            setLoginData({
-              email: '',
-              password: '',
-            });
-          } else {
+        {
+          onError(error, _variables, _context) {
             errorToast({
-              title: 'An Error Occurred!',
-              message: data.msg,
+              message: String(error),
             });
-          }
+          },
+          onSuccess(data, _variables, _context) {
+            if (data.data?.token) {
+              updateAuth(data.data);
+              successToast({
+                message: 'User Logged in successfully!',
+              });
+              setLoginData({
+                email: '',
+                password: '',
+              });
+            } else {
+              errorToast({
+                message: data.msg,
+              });
+            }
+          },
         },
-      },
-    );
-  }, [loginData, mutate, updateAuth]);
+      );
+    } catch (error) {
+      errorToast({
+        message: 'Something went wrong!',
+      });
+    }
+  }, [loginData, loginMutate, updateAuth]);
 
   const navToSignUpScreen = () => {
     navigation.navigate('AuthStack', {
@@ -80,7 +84,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   return (
-    <Screen preset="scroll" baseAllowance={300}>
+    <Screen preset="scroll">
       <Text
         text="Welcome Back!"
         marginTop={40}
@@ -127,7 +131,6 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         marginTop={15}
         marginBottom={3}
         onPress={navToSignUpScreen}
-        textStyle={LINK_TEXT}
       />
 
       <Button
@@ -142,7 +145,3 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
 };
 
 export default SignInScreen;
-
-const LINK_TEXT: TextStyle = {
-  fontSize: 13,
-};

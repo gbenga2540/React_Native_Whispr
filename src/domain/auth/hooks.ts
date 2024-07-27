@@ -1,5 +1,5 @@
 import { useMutation } from 'react-query';
-import { loginUser, registerUser } from './api';
+import { getOTP, loginUser, registerUser, verifyOTP } from './api';
 
 export function useRegisterUser() {
   return useMutation(registerUser, {
@@ -10,5 +10,17 @@ export function useRegisterUser() {
 export function useLoginUser() {
   return useMutation(loginUser, {
     mutationKey: 'loginUser',
+  });
+}
+
+export function useGetOTP() {
+  return useMutation(getOTP, {
+    mutationKey: 'getOTP',
+  });
+}
+
+export function useVerifyOTP() {
+  return useMutation(verifyOTP, {
+    mutationKey: 'verifyOTP',
   });
 }

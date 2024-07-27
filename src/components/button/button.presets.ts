@@ -71,6 +71,7 @@ export const textPresets: (
       color: colors.linkText,
       paddingHorizontal: 0,
       paddingVertical: 0,
+      fontSize: 14,
     } as TextStyle,
   };
 };

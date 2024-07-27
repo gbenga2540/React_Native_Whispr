@@ -3,6 +3,7 @@ import {
   NavigatorScreenParams,
 } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { RegisterUserRequest } from 'src/domain/auth';
 
 declare global {
   namespace ReactNavigation {
@@ -18,6 +19,7 @@ export type RootStackParamList = {
 export type AuthStackParamList = {
   SignInScreen: undefined;
   SignUpScreen: undefined;
+  OTPScreen: RegisterUserRequest;
 };
 
 export type AppStackParamList = {

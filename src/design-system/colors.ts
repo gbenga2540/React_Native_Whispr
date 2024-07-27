@@ -7,6 +7,7 @@ export interface IColors {
   black: string;
   transparent: string;
   inputBackground: string;
+  ddInputBackground: string;
   inputPLText: string;
   linkText: string;
 }
@@ -21,6 +22,7 @@ export const colors: { light: IColors; dark: IColors } = {
     black: '#000000',
     transparent: 'transparent',
     inputBackground: '#efefef',
+    ddInputBackground: '#e4e4e4',
     inputPLText: '#9f9f9f',
     linkText: '#007bff',
   },
@@ -33,6 +35,7 @@ export const colors: { light: IColors; dark: IColors } = {
     black: '#000000',
     transparent: 'transparent',
     inputBackground: '#1a1a1a',
+    ddInputBackground: '#2b2b2b',
     inputPLText: '#6a6a6a',
     linkText: '#4aa3ff',
   },

@@ -1,5 +1,5 @@
 export const images = () => {
   return {
-    logo: require('./logo.png'),
+    default_user: require('./default_user.jpg'),
   };
 };

@@ -11,7 +11,7 @@ interface ToastProps {
 export const errorToast = ({ title, message, hideMsg }: ToastProps) => {
   Toast.show({
     type: 'error',
-    text1: title ?? 'Action Failed!',
+    text1: title ?? 'An Error Occurred!',
     text2: hideMsg ? undefined : message ?? 'Something went wrong',
     autoHide: true,
     visibilityTime: 4000,
@@ -33,7 +33,7 @@ export const successToast = ({ title, message, hideMsg }: ToastProps) => {
 export const infoToast = ({ title, message }: ToastProps) => {
   Toast.show({
     type: 'info',
-    text1: title ?? 'Info',
+    text1: title ?? 'Information!',
     text2: message ?? '',
     autoHide: true,
     visibilityTime: 4000,
