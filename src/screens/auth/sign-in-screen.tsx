@@ -49,7 +49,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         {
           onError(error, _variables, _context) {
             errorToast({
-              message: String(error),
+              message: (error as any)?.response?.data?.msg,
             });
           },
           onSuccess(data, _variables, _context) {
