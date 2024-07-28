@@ -1,4 +1,4 @@
-import { Asset } from 'react-native-image-picker';
+import { ImageOrVideo } from 'react-native-image-crop-picker';
 
 // Requests
 export interface LoginUserRequest {
@@ -12,7 +12,7 @@ export interface RegisterUserRequest {
   full_name: string;
   phone_number: string;
   bio: string;
-  profile_picture?: Asset | null;
+  profile_picture?: ImageOrVideo | null;
 }
 export interface GetOTPRequest {
   email: string;

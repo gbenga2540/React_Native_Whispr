@@ -15,15 +15,11 @@ import { useCustomTheme } from 'src/context/theme/interfaces';
 import { RegisterUserRequest, useGetOTP } from 'src/domain/auth';
 import { errorToast, infoToast } from 'src/helpers';
 import validator from 'validator';
-import {
-  Asset,
-  ImageLibraryOptions,
-  launchCamera,
-  launchImageLibrary,
-} from 'react-native-image-picker';
+import { TextStyle } from 'react-native';
+import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 
 const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
-  const { colors } = useCustomTheme();
+  const { colors, currentTheme } = useCustomTheme();
   interface IRegisterUserRequest extends RegisterUserRequest {
     confirm_password: string;
   }
@@ -40,84 +36,91 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
     password: '',
     confirm_password: '',
   });
-  const [profilePicture, setProfilePicture] = useState<Asset | null>(null);
+  const [profilePicture, setProfilePicture] = useState<ImageOrVideo | null>(
+    null,
+  );
 
   const openCamera = async () => {
-    const options: ImageLibraryOptions = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 500,
-      maxWidth: 500,
-    };
-    const result = await launchCamera(options);
+    try {
+      await ImagePicker.openCamera({
+        width: 400,
+        height: 400,
+        cropping: true,
+        multiple: false,
+        includeBase64: false,
+        enableRotationGesture: true,
+        forceJpg: true,
+        mediaType: 'photo',
+      })
+        .then(res => {
+          if (res) {
+            setProfilePicture(res);
+          } else {
+            errorToast({
+              message: 'Something went wrong!',
+            });
+            return;
+          }
+        })
+        .catch(err => {
+          errorToast({
+            message: err?.message,
+          });
+          return;
+        });
 
-    if (result.didCancel) {
+      return;
+    } catch (error) {
+      clearProfilePicture();
       errorToast({
-        message: 'User cancelled image selection',
+        message: 'Something went wrong!',
       });
       return;
     }
-
-    if (result.errorCode) {
-      errorToast({
-        message: result.errorCode,
-      });
-      return;
-    }
-
-    if (result.errorMessage) {
-      errorToast({
-        message: result.errorMessage,
-      });
-      return;
-    }
-
-    if (result.assets && (result.assets || [])?.length > 0) {
-      setProfilePicture(result.assets[0]);
-    }
-
-    return;
   };
 
   const openGallery = async () => {
-    const options: ImageLibraryOptions = {
-      mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 500,
-      maxWidth: 500,
-    };
-    const result = await launchImageLibrary(options);
+    try {
+      await ImagePicker.openPicker({
+        width: 400,
+        height: 400,
+        cropping: true,
+        multiple: false,
+        includeBase64: false,
+        enableRotationGesture: true,
+        forceJpg: true,
+        mediaType: 'photo',
+      })
+        .then(res => {
+          if (res) {
+            setProfilePicture(res);
+          } else {
+            errorToast({
+              message: 'Something went wrong!',
+            });
+            return;
+          }
+        })
+        .catch(err => {
+          errorToast({
+            message: err?.message,
+          });
+          return;
+        });
 
-    if (result.didCancel) {
+      return;
+    } catch (error) {
+      clearProfilePicture();
       errorToast({
-        message: 'User cancelled image selection',
+        message: 'Something went wrong!',
       });
       return;
     }
-
-    if (result.errorCode) {
-      errorToast({
-        message: result.errorCode,
-      });
-      return;
-    }
-
-    if (result.errorMessage) {
-      errorToast({
-        message: result.errorMessage,
-      });
-      return;
-    }
-
-    if (result.assets && (result.assets || [])?.length > 0) {
-      setProfilePicture(result.assets[0]);
-    }
-
-    return;
   };
 
   const clearProfilePicture = () => {
     setProfilePicture(null);
+    ImagePicker.clean();
   };
 
   const handleInputChange = (key: keyof IRegisterUserRequest, val: string) => {
@@ -238,6 +241,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
     });
   };
 
+  const ICON_STYLES: TextStyle = {
+    color: colors.inputPLText,
+  };
+
   return (
     <Screen preset="scroll">
       <Text
@@ -258,7 +265,11 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
           borderColor={colors.inputPLText}
           borderRadius={80}>
           <Image
-            sourceFile={profilePicture ? profilePicture : images().default_user}
+            sourceFile={
+              profilePicture
+                ? { uri: profilePicture.sourceURL }
+                : images(currentTheme === 'dark').default_user
+            }
             width={110}
             height={110}
             borderRadius={110}
@@ -277,7 +288,9 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
             onPress={openCamera}
             borderRadius={50}
             backgroundColor={colors.inputBackground}
-            children={<Icon name="camera" width={28} height={28} />}
+            children={
+              <Icon name="camera" width={28} height={28} style={ICON_STYLES} />
+            }
           />
 
           <Button
@@ -292,6 +305,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
                 width={26}
                 height={26}
                 color={colors.inputBackground}
+                style={ICON_STYLES}
               />
             }
           />
@@ -308,6 +322,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
                 width={25}
                 height={25}
                 color={colors.inputBackground}
+                style={ICON_STYLES}
               />
             }
           />

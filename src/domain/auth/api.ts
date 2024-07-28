@@ -21,9 +21,9 @@ export async function registerUser(
   data.append('password', payload.password);
   if (payload.profile_picture) {
     data.append('profile_picture', {
-      uri: payload.profile_picture.uri,
-      type: payload.profile_picture.type,
-      name: payload.profile_picture.fileName,
+      uri: payload.profile_picture.sourceURL,
+      type: payload.profile_picture.mime,
+      name: payload.profile_picture.filename,
       height: payload.profile_picture.height,
       width: payload.profile_picture.width,
     });

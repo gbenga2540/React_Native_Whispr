@@ -38,4 +38,9 @@ export interface TextFieldProps extends DefaultTIProps, Partial<ViewStyle> {
    * Text field right component/child
    */
   rightChild?: React.ReactNode;
+
+  /**
+   * Height for the search container
+   */
+  containerHeight?: number;
 }
