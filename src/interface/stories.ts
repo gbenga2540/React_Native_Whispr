@@ -4,4 +4,5 @@ export interface IStories {
   profile_picture?: string;
   story_link?: string;
   created_at?: string;
+  viewed?: boolean;
 }

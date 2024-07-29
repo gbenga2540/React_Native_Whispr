@@ -28,6 +28,15 @@ export type AppStackParamList = {
 
 export type HomeStackParamsList = {
   HomeScreen: undefined;
+  ChatScreen: {
+    chat_id: string;
+    recipient_info: {
+      user_id: string;
+      user_name: string;
+      profile_picture: string;
+    };
+    online: boolean;
+  };
 };
 
 export type AuthStackScreenProps<Screen extends keyof AuthStackParamList> =

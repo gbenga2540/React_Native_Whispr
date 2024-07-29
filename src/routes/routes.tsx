@@ -17,6 +17,7 @@ import OTPScreen from 'src/screens/auth/otp-screen';
 
 // Screens for the Home Stack
 import HomeScreen from 'src/screens/home/home-screen';
+import ChatScreen from 'src/screens/home/chat-screen';
 
 interface Route<List extends Record<string, object | undefined>> {
   name: keyof List;
@@ -35,4 +36,5 @@ export const appRoutes: Array<Route<AppStackParamList>> = [
 
 export const homeRoutes: Array<Route<HomeStackParamsList>> = [
   { name: 'HomeScreen', component: HomeScreen },
+  { name: 'ChatScreen', component: ChatScreen },
 ];
