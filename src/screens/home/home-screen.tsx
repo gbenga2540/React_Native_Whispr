@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { RefreshControl, ScrollView, TextStyle } from 'react-native';
+import { Alert, RefreshControl, ScrollView, TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import {
   Button,
@@ -21,9 +21,10 @@ import { useGetUserChats } from 'src/domain/chat';
 // TODO: Test
 import { storiesData } from 'src/_mock/stories';
 import { useMessagesStore } from 'src/store/message/message.store';
+import { images } from 'src/assets/images/images';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
-  const { colors } = useCustomTheme();
+  const { colors, currentTheme } = useCustomTheme();
   const { auth, clearAuth } = useAuthStore();
 
   const clearMessages = useMessagesStore().clearMessages;
@@ -51,9 +52,20 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   const log_out = () => {
-    clearAuth();
-    clearChats();
-    clearMessages();
+    Alert.alert('Sign Out?', 'Are you sure you want to log out?', [
+      {
+        text: 'Cancel',
+        style: 'destructive',
+      },
+      {
+        text: 'Sign Out',
+        onPress: () => {
+          clearAuth();
+          clearChats();
+          clearMessages();
+        },
+      },
+    ]);
   };
 
   return (
@@ -62,7 +74,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
         marginTop={10}
         marginBottom={4}
         flexDirection="row"
-        justifyContent="space-between"
+        // justifyContent="space-between"
         alignItems="center">
         <Text
           text="Conversations"
@@ -71,15 +83,32 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
         />
 
         <Button
-          onPress={log_out}
-          alignItems="flex-end"
-          width={50}
+          marginLeft={'auto'}
+          alignItems="center"
+          width={35}
           height={50}
           backgroundColor={colors.transparent}
           children={
             <Icon name="new-conversation" size={24} style={ICON_STYLE} />
           }
         />
+
+        <Pressable marginLeft={10} onPress={log_out}>
+          <Image
+            sourceFile={
+              auth?.user?.profile_picture
+                ? {
+                    uri: auth?.user?.profile_picture,
+                    width: 31,
+                    height: 31,
+                  }
+                : images(currentTheme === 'dark').default_user
+            }
+            width={31}
+            height={31}
+            borderRadius={16}
+          />
+        </Pressable>
       </View>
 
       <View>
