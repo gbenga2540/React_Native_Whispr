@@ -35,6 +35,12 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
     user_id: auth?.user?.user_id!,
   });
   const [searchChat, setSearchChat] = useState<string>('');
+  const filteredChats =
+    userChats.filter(
+      chat =>
+        chat?.recipient_info?.full_name?.includes(searchChat) ||
+        chat.recipient_info?.user_name?.includes(searchChat),
+    ) || [];
 
   const ICON_STYLE: TextStyle = {
     color: colors.grayText,
@@ -158,6 +164,8 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
         value={searchChat}
         setValue={setSearchChat}
         marginTop={20}
+        autoCorrect={false}
+        autoCapitalize="none"
         placeholder="Search"
         leftChild={
           <View marginRight={8}>
@@ -168,14 +176,14 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
 
       {isLoading && userChats?.length === 0 ? (
         <LoadingScreen />
-      ) : userChats?.length > 0 ? (
+      ) : filteredChats?.length > 0 ? (
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={isFetching} onRefresh={refetch} />
           }
           onScrollEndDrag={() => fetchNextPage()}
           showsVerticalScrollIndicator={false}>
-          {userChats?.map((chat, index) => (
+          {filteredChats?.map((chat, index) => (
             <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
           ))}
         </ScrollView>
