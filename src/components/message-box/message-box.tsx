@@ -11,6 +11,7 @@ export function MessageBox({
   data,
   createdAt,
   sender_id,
+  status,
 }: MessageBoxProps): React.JSX.Element {
   const user = useAuthStore().auth;
   const { colors } = useCustomTheme();
@@ -19,7 +20,7 @@ export function MessageBox({
   const is_user: boolean = user?.user?.user_id === sender_id;
 
   const TICK_STYLE: TextStyle = {
-    color: colors.primary,
+    color: status === 'R' ? colors.primary : colors.inputPLText,
     marginLeft: 'auto',
     marginTop: 3,
   };
