@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RegisterUserRequest } from 'src/domain/auth';
+import { IChat } from 'src/interface/chat';
 
 declare global {
   namespace ReactNavigation {
@@ -30,11 +31,7 @@ export type HomeStackParamsList = {
   HomeScreen: undefined;
   ChatScreen: {
     chat_id: string;
-    recipient_info: {
-      user_id: string;
-      user_name: string;
-      profile_picture: string;
-    };
+    recipient_info: IChat['recipient_info'];
     online: boolean;
   };
 };

@@ -26,11 +26,7 @@ export function ChatBox({
           screen: 'ChatScreen',
           params: {
             chat_id: chat_id,
-            recipient_info: {
-              profile_picture: recipient_info?.profile_picture!,
-              user_id: recipient_info?.user_id!,
-              user_name: recipient_info?.user_name!,
-            },
+            recipient_info,
             online: online ?? false,
           },
         },

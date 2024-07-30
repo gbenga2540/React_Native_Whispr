@@ -7,6 +7,9 @@ export interface IChat {
     user_id?: string;
     user_name?: string;
     profile_picture?: string;
+    bio?: string;
+    full_name?: string;
+    phone_number?: string;
   };
   last_message_info?: {
     text?: string;

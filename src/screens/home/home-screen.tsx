@@ -34,7 +34,6 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
     limit: 10,
     user_id: auth?.user?.user_id!,
   });
-
   const [searchChat, setSearchChat] = useState<string>('');
 
   const ICON_STYLE: TextStyle = {

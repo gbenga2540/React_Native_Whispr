@@ -112,13 +112,20 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
           </View>
         </Pressable>
 
-        <Text
-          text={route_params.recipient_info.user_name || ''}
-          fontFamily={fonts.primaryFont_500}
-          fontSize={18}
-          marginRight={'auto'}
-          limit={20}
-        />
+        <View marginRight={'auto'}>
+          <Text
+            text={route_params.recipient_info?.user_name || ''}
+            fontFamily={fonts.primaryFont_500}
+            fontSize={17}
+            limit={20}
+          />
+          <Text
+            text={route_params.recipient_info?.bio || ''}
+            fontFamily={fonts.primaryFont_300}
+            fontSize={11}
+            limit={39}
+          />
+        </View>
 
         <Button
           alignItems="flex-end"
