@@ -26,6 +26,7 @@ export async function registerUser(
       name: payload.profile_picture.filename,
       height: payload.profile_picture.height,
       width: payload.profile_picture.width,
+      size: payload.profile_picture.size,
     });
   }
 

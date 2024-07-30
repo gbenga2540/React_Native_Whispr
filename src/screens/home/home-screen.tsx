@@ -1,11 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
-import { ScrollView, TextStyle } from 'react-native';
+import { RefreshControl, ScrollView, TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import {
   Button,
   ChatBox,
   Icon,
   Image,
+  LoadingScreen,
   Pressable,
   Screen,
   Text,
@@ -14,14 +15,22 @@ import {
 } from 'src/components';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { useAuthStore } from 'src/store/auth/auth.store';
+import { useChatsStore } from 'src/store/chat/chat.store';
 
 // TODO: Test
 import { storiesData } from 'src/_mock/stories';
-import { chatsData } from 'src/_mock/chat';
+import { useGetUserChats } from 'src/domain/chat';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors } = useCustomTheme();
-  const clearAuth = useAuthStore().clearAuth;
+  const { auth, clearAuth } = useAuthStore();
+  const { chats: userChats, clearChats } = useChatsStore();
+
+  const { isLoading, fetchNextPage, isFetching, refetch } = useGetUserChats({
+    page: 1,
+    limit: 10,
+    user_id: auth?.user?.user_id!,
+  });
 
   const [searchChat, setSearchChat] = useState<string>('');
 
@@ -31,6 +40,11 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
 
   const ADD_STORY_ICON_STYLE: TextStyle = {
     color: colors.inputPLText,
+  };
+
+  const log_out = () => {
+    clearAuth();
+    clearChats();
   };
 
   return (
@@ -48,7 +62,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
         />
 
         <Button
-          onPress={() => clearAuth()}
+          onPress={log_out}
           alignItems="flex-end"
           width={50}
           height={50}
@@ -100,6 +114,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
                   borderRadius={11}
                   resizeMode="cover"
                 />
+
                 <View
                   position="absolute"
                   backgroundColor={colors.background}
@@ -148,11 +163,28 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
         }
       />
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {chatsData?.map((chat, index) => (
-          <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
-        ))}
-      </ScrollView>
+      {isLoading && userChats?.length === 0 ? (
+        <LoadingScreen />
+      ) : userChats?.length > 0 ? (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={isFetching} onRefresh={refetch} />
+          }
+          onScrollEndDrag={() => fetchNextPage()}
+          showsVerticalScrollIndicator={false}>
+          {userChats?.map((chat, index) => (
+            <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
+          ))}
+        </ScrollView>
+      ) : (
+        <View flex={1} justifyContent="center" alignItems="center">
+          <Text
+            text="No Chats Found!"
+            fontSize={15}
+            color={colors.inputPLText}
+          />
+        </View>
+      )}
     </Screen>
   );
 };

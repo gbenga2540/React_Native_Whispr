@@ -12,6 +12,19 @@ interface Auth {
   };
 }
 
+interface ServerPaginationRequest {
+  page?: number;
+  limit?: number;
+}
+interface ServerPaginationResponse<T> {
+  items: T[];
+  page: {
+    total_page: number;
+    current_page: number;
+    next_page: number;
+  };
+}
+
 interface ServerResponse<T> {
   status: number;
   msg?: string;

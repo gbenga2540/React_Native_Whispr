@@ -340,6 +340,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         value={registerData.user_name}
         setValue={text => handleInputChange('user_name', text as string)}
         placeholder="johndoe"
+        autoCorrect={false}
+        autoCapitalize="none"
         // autoFocus={true}
       />
 
@@ -354,6 +356,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         value={registerData.full_name}
         setValue={text => handleInputChange('full_name', text as string)}
         placeholder="John Doe"
+        autoCorrect={false}
       />
 
       <Text
@@ -381,6 +384,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         setValue={text => handleInputChange('phone_number', text as string)}
         placeholder="+2348000000000"
         inputMode="tel"
+        autoCorrect={false}
       />
 
       <Text
@@ -395,6 +399,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         setValue={text => handleInputChange('email', text as string)}
         placeholder="johndoe@gmail.com"
         autoCapitalize="none"
+        autoComplete="email"
+        autoCorrect={false}
       />
 
       <Text
@@ -410,6 +416,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         placeholder="********"
         secureTextEntry
         isPassword
+        autoCorrect={false}
+        autoCapitalize="none"
       />
 
       <Text
@@ -425,6 +433,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         placeholder="********"
         secureTextEntry
         isPassword
+        autoCorrect={false}
+        autoCapitalize="none"
       />
 
       <Button

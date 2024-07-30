@@ -8,8 +8,6 @@ export interface IChat {
     user_name?: string;
     profile_picture?: string;
   };
-
-  //new info
   last_message_info?: {
     text?: string;
     at?: string;
