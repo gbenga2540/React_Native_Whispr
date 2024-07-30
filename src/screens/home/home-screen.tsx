@@ -16,16 +16,19 @@ import {
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { useAuthStore } from 'src/store/auth/auth.store';
 import { useChatsStore } from 'src/store/chat/chat.store';
+import { useGetUserChats } from 'src/domain/chat';
 
 // TODO: Test
 import { storiesData } from 'src/_mock/stories';
-import { useGetUserChats } from 'src/domain/chat';
+import { useMessagesStore } from 'src/store/message/message.store';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors } = useCustomTheme();
   const { auth, clearAuth } = useAuthStore();
-  const { chats: userChats, clearChats } = useChatsStore();
 
+  const clearMessages = useMessagesStore().clearMessages;
+
+  const { chats: userChats, clearChats } = useChatsStore();
   const { isLoading, fetchNextPage, isFetching, refetch } = useGetUserChats({
     page: 1,
     limit: 10,
@@ -45,6 +48,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const log_out = () => {
     clearAuth();
     clearChats();
+    clearMessages();
   };
 
   return (

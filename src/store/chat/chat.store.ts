@@ -5,11 +5,13 @@ import { IChat } from '../../interface/chat';
 
 type State = {
   chats: IChat[];
+  isHydrated: boolean;
 };
 
 type Action = {
   updateChats: (chats: IChat[]) => void;
   clearChats: () => void;
+  setHydrated: () => void;
 };
 
 export const useChatsStore = create<
@@ -19,7 +21,7 @@ export const useChatsStore = create<
   persist(
     set => ({
       chats: [],
-      page: { current_page: 1, next_page: 0, total_page: 1 },
+      isHydrated: false,
       updateChats: chats => {
         set(() => ({
           chats: chats.sort((a, b) =>
@@ -28,12 +30,20 @@ export const useChatsStore = create<
         }));
       },
       clearChats: () => {
-        set(() => ({ chats: [] }));
+        set(() => ({
+          chats: [],
+        }));
+      },
+      setHydrated: () => {
+        set({ isHydrated: true });
       },
     }),
     {
       name: 'chats-storage',
       storage: createJSONStorage(() => AsyncStorage),
+      onRehydrateStorage: () => state => {
+        state?.setHydrated();
+      },
     },
   ),
 );

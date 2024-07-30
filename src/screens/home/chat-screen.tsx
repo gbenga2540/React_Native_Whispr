@@ -7,6 +7,7 @@ import {
   Button,
   Icon,
   Image,
+  LoadingScreen,
   MessageBox,
   Pressable,
   Screen,
@@ -16,14 +17,19 @@ import {
 } from 'src/components';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { HomeStackParamsList } from 'src/routes/types';
-
-// TODO: Test
-import { messagesData } from 'src/_mock/messages';
+import { useGetChatMessages } from 'src/domain/messages';
+import { useMessagesStore } from 'src/store/message/message.store';
 
 const ChatScreen: FunctionComponent = (): React.JSX.Element => {
   const navigation = useNavigation();
   const route = useRoute<RouteProp<HomeStackParamsList, 'ChatScreen'>>();
   const route_params = route.params;
+
+  const { user_messages } = useMessagesStore();
+  const { isLoading, refetch } = useGetChatMessages({
+    chat_id: route_params.chat_id,
+  });
+  const chatMessages = user_messages?.[route_params.chat_id];
 
   const { colors, currentTheme } = useCustomTheme();
 
@@ -145,22 +151,33 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
         />
       </View>
 
-      <View flex={1}>
-        <FlatList
-          data={messagesData}
-          renderItem={({ item }) => <MessageBox {...item} />}
-          keyExtractor={(item, index) => `${item._id} - ${index}`}
-          showsVerticalScrollIndicator={false}
-          windowSize={8}
-          initialNumToRender={8}
-          maxToRenderPerBatch={8}
-
-          // refreshing={false}
-          // onEndReached={() => fetchNextPage()}
-          // onRefresh={refetch}
-          // onEndReachedThreshold={0.5}
-        />
-      </View>
+      {isLoading && chatMessages?.length === 0 ? (
+        <LoadingScreen />
+      ) : chatMessages?.length > 0 ? (
+        <View flex={1}>
+          <FlatList
+            data={chatMessages}
+            renderItem={({ item }) => <MessageBox {...item} />}
+            keyExtractor={(item, index) => `${item._id} - ${index}`}
+            showsVerticalScrollIndicator={false}
+            windowSize={8}
+            initialNumToRender={8}
+            maxToRenderPerBatch={8}
+            onRefresh={refetch}
+            refreshing={false}
+            // onEndReachedThreshold={0.5}
+            // onEndReached={() => fetchNextPage()}
+          />
+        </View>
+      ) : (
+        <View flex={1} justifyContent="center" alignItems="center">
+          <Text
+            text="No Messages Found!"
+            fontSize={15}
+            color={colors.inputPLText}
+          />
+        </View>
+      )}
 
       <View
         height={40}

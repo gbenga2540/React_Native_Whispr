@@ -11,7 +11,7 @@ export function useCreateChat() {
 }
 
 export function useGetUserChats(payload: GetUserChatsRequest) {
-  const updateChats = useChatsStore().updateChats;
+  const { updateChats, isHydrated } = useChatsStore();
 
   return useInfiniteQuery(
     ['getUserChats', payload.user_id],
@@ -29,6 +29,7 @@ export function useGetUserChats(payload: GetUserChatsRequest) {
       refetchIntervalInBackground: true,
       refetchOnReconnect: true,
       refetchOnWindowFocus: true,
+      enabled: isHydrated,
       onSuccess: data => {
         const userChatsData: IChat[] =
           (data?.pages || [])
