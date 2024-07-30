@@ -5,6 +5,7 @@ import addStory from '../../assets/svg/add-story.svg';
 import backBtn from '../../assets/svg/back-btn.svg';
 import camera from '../../assets/svg/camera.svg';
 import close from '../../assets/svg/close.svg';
+import doubleTick from '../../assets/svg/double-tick.svg';
 import gallery from '../../assets/svg/gallery.svg';
 import newConversation from '../../assets/svg/new-conversation.svg';
 import pwdOff from '../../assets/svg/pwd-off.svg';
@@ -20,6 +21,7 @@ export const ICONS = {
   'back-btn': backBtn,
   camera: camera,
   close: close,
+  'double-tick': doubleTick,
   gallery: gallery,
   'new-conversation': newConversation,
   'pwd-off': pwdOff,

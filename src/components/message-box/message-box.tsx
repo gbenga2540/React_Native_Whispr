@@ -23,6 +23,8 @@ export function MessageBox({
     color: status === 'R' ? colors.primary : colors.inputPLText,
     marginLeft: 'auto',
     marginTop: 3,
+    marginBottom: status === 'U' ? 0 : -4,
+    marginRight: status === 'U' ? 0 : -5,
   };
 
   return (
@@ -49,7 +51,13 @@ export function MessageBox({
           fontSize={15}
         />
 
-        {is_user && <Icon name="tick" style={TICK_STYLE} size={14} />}
+        {is_user && (
+          <Icon
+            name={status === 'U' ? 'tick' : 'double-tick'}
+            size={status === 'U' ? 14 : 24}
+            style={TICK_STYLE}
+          />
+        )}
       </View>
 
       <Text

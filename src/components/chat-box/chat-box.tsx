@@ -41,6 +41,8 @@ export function ChatBox({
   const TICK_STYLE: TextStyle = {
     color:
       last_message_info?.status === 'R' ? colors.primary : colors.inputPLText,
+    marginBottom: last_message_info?.status === 'U' ? 0 : -4,
+    marginRight: last_message_info?.status === 'U' ? 0 : -5,
   };
 
   return (
@@ -133,7 +135,11 @@ export function ChatBox({
               />
             </View>
           ) : (
-            <Icon name="tick" size={14} style={TICK_STYLE} />
+            <Icon
+              name={last_message_info?.status === 'U' ? 'tick' : 'double-tick'}
+              size={last_message_info?.status === 'U' ? 14 : 24}
+              style={TICK_STYLE}
+            />
           )}
         </View>
       </View>
