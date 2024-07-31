@@ -30,7 +30,9 @@ export async function registerUser(
     });
   }
 
-  const response = await instance.post('/auth/register', data);
+  const response = await instance.post('/auth/register', data, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  });
   return response.data;
 }
 

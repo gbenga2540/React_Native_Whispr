@@ -1,5 +1,5 @@
 {
-  "name": "whsipr",
+  "name": "whispr",
   "version": "0.0.1",
   "private": true,
   "repository": "https://github.com/gbenga2540/React_Native_Template.git",
@@ -16,6 +16,7 @@
     "android:apk:prod": "cd android && ./gradlew app:assembleRelease",
     "android:apk:open": "open android/app/build/outputs/apk/release",
     "android:apk:prod:open": "yarn clean:android && yarn android:apk:prod && yarn android:apk:open && yarn kill:java",
+    "android:apk:prod:open:noclean": "yarn android:apk:prod && yarn android:apk:open && yarn kill:java",
     "android:bundle": "cd android && ./gradlew app:bundleDebug",
     "android:bundle:prod": "cd android && ./gradlew app:bundleRelease",
     "gen-asr": "cd android && ./gradlew signingReport",
@@ -39,7 +40,9 @@
     "svg": "node ./src/codegen/svg-gen.js"
   },
   "dependencies": {
+    "@gorhom/bottom-sheet": "^4.6.4",
     "@react-native-async-storage/async-storage": "^1.23.1",
+    "@react-native-community/blur": "4.3.2",
     "@react-native-community/netinfo": "^11.3.2",
     "@react-navigation/native": "^6.1.17",
     "@react-navigation/native-stack": "^6.9.26",

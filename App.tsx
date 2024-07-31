@@ -17,8 +17,10 @@ import SplashScreen from 'react-native-splash-screen';
 import { Platform } from 'react-native';
 import { CustomThemeProvider } from 'src/context/theme/theme';
 import { AuthProvider } from 'src/context/auth/auth';
+import { BlurProvider } from 'src/context/blur/blur';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import ToastContainer from 'react-native-toast-message';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 
 const App: FunctionComponent = () => {
   const queryClient = new QueryClient();
@@ -32,12 +34,16 @@ const App: FunctionComponent = () => {
         <AuthProvider>
           <GestureHandlerRootView style={DEFAULT_CONTAINER}>
             <SafeAreaProvider>
-              <NavigationContainer
-                onReady={() =>
-                  Platform.OS === 'android' && SplashScreen.hide()
-                }>
-                <RootStack />
-              </NavigationContainer>
+              <BottomSheetModalProvider>
+                <BlurProvider>
+                  <NavigationContainer
+                    onReady={() =>
+                      Platform.OS === 'android' && SplashScreen.hide()
+                    }>
+                    <RootStack />
+                  </NavigationContainer>
+                </BlurProvider>
+              </BottomSheetModalProvider>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </AuthProvider>

@@ -14,9 +14,9 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
   const route = useRoute<RouteProp<AuthStackParamList, 'OTPScreen'>>();
   const route_params = route.params;
 
-  const { mutate: verifyOTPMutate, isLoading } = useVerifyOTP();
+  const { mutateAsync: verifyOTPMutate, isLoading } = useVerifyOTP();
   const { mutate: getOTPMutate, isLoading: getOTPIsLoading } = useGetOTP();
-  const { mutate: registerUserMutate, isLoading: registerUserIsLoading } =
+  const { mutateAsync: registerUserMutate, isLoading: registerUserIsLoading } =
     useRegisterUser();
 
   const [otpValue, setOTPValue] = useState<string[]>([]);
@@ -31,11 +31,13 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
       {
         onError(error, _variables, _context) {
           errorToast({
-            message: (error as any)?.response?.data?.msg,
+            message:
+              (error as any)?.response?.data?.msg || (error as Error)?.message,
           });
         },
         onSuccess(data, _variables, _context) {
           if (data.data) {
+            setOTPValue([]);
             successToast({
               title: 'OTP Verification',
               message: 'OTP sent successfully!',
@@ -50,32 +52,43 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
     );
   };
 
-  const registerUser = useCallback(() => {
-    registerUserMutate(
-      { ...route_params },
-      {
-        onError(error, _variables, _context) {
-          errorToast({
-            message: (error as any)?.response?.data?.msg,
-          });
-        },
-        onSuccess(data, _variables, _context) {
-          if (data.data?.token) {
-            updateAuth(data.data);
-            successToast({
-              message: 'User Logged in successfully!',
-            });
-          } else {
+  const registerUser = useCallback(async () => {
+    try {
+      await registerUserMutate(
+        { ...route_params },
+        {
+          onError(error, _variables, _context) {
             errorToast({
-              message: data.msg,
+              message:
+                (error as any)?.response?.data?.msg ||
+                (error as Error)?.message,
             });
-          }
+          },
+          onSuccess(data, _variables, _context) {
+            if (data.data?.token) {
+              updateAuth(data.data);
+              successToast({
+                message: 'User Logged in successfully!',
+              });
+            } else {
+              errorToast({
+                message: data.msg,
+              });
+            }
+          },
         },
-      },
-    );
+      );
+    } catch (error) {
+      errorToast({
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
+      });
+    }
   }, [registerUserMutate, route_params, updateAuth]);
 
-  const verifyOTP = useCallback(() => {
+  const verifyOTP = useCallback(async () => {
     try {
       if (otpValue.length < 4) {
         errorToast({
@@ -84,7 +97,7 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
         return;
       }
 
-      verifyOTPMutate(
+      await verifyOTPMutate(
         {
           email: route_params.email,
           token: otpValue.join(''),
@@ -92,7 +105,9 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
         {
           onError(error, _variables, _context) {
             errorToast({
-              message: (error as any)?.response?.data?.msg,
+              message:
+                (error as any)?.response?.data?.msg ||
+                (error as Error)?.message,
             });
           },
           onSuccess: async (data, _variables, _context) => {
@@ -108,7 +123,10 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
       );
     } catch (error) {
       errorToast({
-        message: 'Something went wrong!',
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
       });
     }
   }, [verifyOTPMutate, otpValue, route_params.email, registerUser]);

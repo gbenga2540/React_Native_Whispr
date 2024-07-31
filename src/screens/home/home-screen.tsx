@@ -1,7 +1,8 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useCallback, useRef, useState } from 'react';
 import { Alert, RefreshControl, ScrollView, TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import {
+  BottomSheet,
   Button,
   ChatBox,
   Icon,
@@ -17,11 +18,12 @@ import { useCustomTheme } from 'src/context/theme/interfaces';
 import { useAuthStore } from 'src/store/auth/auth.store';
 import { useChatsStore } from 'src/store/chat/chat.store';
 import { useGetUserChats } from 'src/domain/chat';
+import { images } from 'src/assets/images/images';
+import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
 
 // TODO: Test
 import { storiesData } from 'src/_mock/stories';
 import { useMessagesStore } from 'src/store/message/message.store';
-import { images } from 'src/assets/images/images';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors, currentTheme } = useCustomTheme();
@@ -68,13 +70,22 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
     ]);
   };
 
+  const sheetRef = useRef<BottomSheetModal>(null);
+  const handlePresentModalPress = useCallback(() => {
+    sheetRef.current?.present();
+  }, []);
+
   return (
     <Screen preset="fixed">
+      <BottomSheet ref={sheetRef}>
+        <BottomSheetView style={{ flex: 1 }}>
+          <Text text="Awesome 🎉" />
+        </BottomSheetView>
+      </BottomSheet>
       <View
         marginTop={10}
         marginBottom={4}
         flexDirection="row"
-        // justifyContent="space-between"
         alignItems="center">
         <Text
           text="Conversations"
@@ -88,6 +99,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
           width={35}
           height={50}
           backgroundColor={colors.transparent}
+          onPress={handlePresentModalPress}
           children={
             <Icon name="new-conversation" size={24} style={ICON_STYLE} />
           }
@@ -97,11 +109,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
           <Image
             sourceFile={
               auth?.user?.profile_picture
-                ? {
-                    uri: auth?.user?.profile_picture,
-                    width: 31,
-                    height: 31,
-                  }
+                ? { uri: auth?.user?.profile_picture }
                 : images(currentTheme === 'dark').default_user
             }
             width={31}
@@ -146,7 +154,11 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
                 justifyContent="center"
                 alignItems="center">
                 <Image
-                  sourceFile={{ uri: story?.profile_picture }}
+                  sourceFile={
+                    story?.profile_picture
+                      ? { uri: story?.profile_picture }
+                      : images(currentTheme === 'dark').default_user
+                  }
                   width={48}
                   height={48}
                   borderRadius={11}

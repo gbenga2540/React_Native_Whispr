@@ -15,7 +15,7 @@ import { useCustomTheme } from 'src/context/theme/interfaces';
 import { RegisterUserRequest, useGetOTP } from 'src/domain/auth';
 import { errorToast, infoToast } from 'src/helpers';
 import validator from 'validator';
-import { TextStyle } from 'react-native';
+import { Platform, TextStyle } from 'react-native';
 import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 
 const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
@@ -23,7 +23,6 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
   interface IRegisterUserRequest extends RegisterUserRequest {
     confirm_password: string;
   }
-
   const navigation = useNavigation();
   const { mutate: getOTPMutate, isLoading } = useGetOTP();
 
@@ -73,7 +72,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
     } catch (error) {
       clearProfilePicture();
       errorToast({
-        message: 'Something went wrong!',
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
       });
       return;
     }
@@ -88,7 +90,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         multiple: false,
         includeBase64: false,
         enableRotationGesture: true,
-        forceJpg: true,
+        forceJpg: false,
         mediaType: 'photo',
       })
         .then(res => {
@@ -112,7 +114,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
     } catch (error) {
       clearProfilePicture();
       errorToast({
-        message: 'Something went wrong!',
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
       });
       return;
     }
@@ -153,7 +158,11 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         return;
       }
 
-      if (!validator.isMobilePhone(registerData.phone_number.trim())) {
+      if (
+        !validator.isMobilePhone(registerData.phone_number.trim(), 'any', {
+          strictMode: true,
+        })
+      ) {
         errorToast({
           message: 'Invalid Phone Number!',
         });
@@ -193,7 +202,9 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         {
           onError(error, _variables, _context) {
             errorToast({
-              message: (error as any)?.response?.data?.msg,
+              message:
+                (error as any)?.response?.data?.msg ||
+                (error as Error)?.message,
             });
           },
           onSuccess(data, _variables, _context) {
@@ -207,19 +218,17 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
                   password: registerData.password.trim(),
                   phone_number: registerData.phone_number.trim(),
                   user_name: registerData.user_name.trim(),
-                  profile_picture: profilePicture,
+                  profile_picture: profilePicture
+                    ? ({
+                        ...profilePicture,
+                        sourceURL:
+                          Platform.OS === 'ios'
+                            ? profilePicture?.sourceURL
+                            : profilePicture?.path,
+                      } as ImageOrVideo)
+                    : null,
                 },
               });
-
-              // setRegisterData({
-              //   email: '',
-              //   user_name: '',
-              //   bio: '',
-              //   full_name: '',
-              //   phone_number: '',
-              //   password: '',
-              //   confirm_password: '',
-              // });
             } else {
               errorToast({
                 message: data.msg,
@@ -230,7 +239,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       );
     } catch (error) {
       errorToast({
-        message: 'Something went wrong!',
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
       });
     }
   }, [registerData, navigation, getOTPMutate, profilePicture]);
@@ -267,12 +279,17 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
           <Image
             sourceFile={
               profilePicture
-                ? { uri: profilePicture.sourceURL }
+                ? {
+                    uri:
+                      Platform.OS === 'ios'
+                        ? profilePicture.sourceURL
+                        : profilePicture.path,
+                  }
                 : images(currentTheme === 'dark').default_user
             }
             width={110}
             height={110}
-            borderRadius={110}
+            borderRadius={55}
           />
         </View>
 

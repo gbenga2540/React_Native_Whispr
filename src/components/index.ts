@@ -1,3 +1,4 @@
+export * from './bottom-sheet/bottom-sheet';
 export * from './button/button';
 export * from './chat-box/chat-box';
 export * from './check-box/check-box';

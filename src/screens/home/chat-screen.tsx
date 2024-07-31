@@ -78,16 +78,12 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
           <Image
             sourceFile={
               route_params?.recipient_info?.profile_picture
-                ? {
-                    uri: route_params?.recipient_info?.profile_picture,
-                    width: 26,
-                    height: 26,
-                  }
+                ? { uri: route_params?.recipient_info?.profile_picture }
                 : images(currentTheme === 'dark').default_user
             }
-            borderRadius={30}
             width={26}
             height={26}
+            borderRadius={14}
           />
 
           <View

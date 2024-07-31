@@ -49,7 +49,9 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
         {
           onError(error, _variables, _context) {
             errorToast({
-              message: (error as any)?.response?.data?.msg,
+              message:
+                (error as any)?.response?.data?.msg ||
+                (error as Error)?.message,
             });
           },
           onSuccess(data, _variables, _context) {
@@ -72,7 +74,10 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
       );
     } catch (error) {
       errorToast({
-        message: 'Something went wrong!',
+        message:
+          (error as any)?.response?.data?.msg ||
+          (error as Error)?.message ||
+          'Something went wrong!',
       });
     }
   }, [loginData, loginMutate, updateAuth]);

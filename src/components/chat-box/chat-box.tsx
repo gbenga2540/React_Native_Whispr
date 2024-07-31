@@ -7,6 +7,7 @@ import { TextStyle } from 'react-native';
 import TimeAgo from 'javascript-time-ago';
 import { useNavigation } from '@react-navigation/native';
 import { infoToast } from 'src/helpers';
+import { images } from 'src/assets/images/images';
 
 export function ChatBox({
   recipient_info,
@@ -15,7 +16,7 @@ export function ChatBox({
   online,
 }: ChatBoxProps): React.JSX.Element {
   const navigation = useNavigation();
-  const { colors } = useCustomTheme();
+  const { colors, currentTheme } = useCustomTheme();
   const timeAgo = new TimeAgo('en-US');
 
   const navToChat = () => {
@@ -53,12 +54,14 @@ export function ChatBox({
       marginBottom={10}>
       <View>
         <Image
-          sourceFile={{
-            uri: recipient_info?.profile_picture,
-            width: 48,
-            height: 48,
-          }}
+          sourceFile={
+            recipient_info?.profile_picture
+              ? { uri: recipient_info?.profile_picture }
+              : images(currentTheme === 'dark').default_user
+          }
           borderRadius={12}
+          width={48}
+          height={48}
         />
 
         <View
