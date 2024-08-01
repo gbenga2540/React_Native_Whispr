@@ -25,7 +25,7 @@ export const useChatsStore = create<
       updateChats: chats => {
         set(() => ({
           chats: chats.sort((a, b) =>
-            b.created_at!?.localeCompare(a.created_at!),
+            b.updated_at!?.localeCompare(a.updated_at!),
           ),
         }));
       },

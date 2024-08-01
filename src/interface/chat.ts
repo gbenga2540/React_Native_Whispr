@@ -3,6 +3,7 @@ import { IMessage } from './message';
 export interface IChat {
   chat_id?: string;
   created_at?: string;
+  updated_at?: string;
   recipient_info?: {
     user_id?: string;
     user_name?: string;
