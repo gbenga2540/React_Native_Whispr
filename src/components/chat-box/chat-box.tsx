@@ -131,38 +131,60 @@ export function ChatBox({
               `Send a message to ${recipient_info?.full_name}...`
             }
             color={colors.inputPLText}
-            limit={90}
+            limit={120}
             fontSize={14}
             flex={1}
           />
-          {typeof last_message_info?.unread === 'number' &&
-          last_message_info?.unread > 0 ? (
+          {last_message_info?.data ? (
+            <>
+              {typeof last_message_info?.unread === 'number' &&
+              last_message_info?.unread > 0 ? (
+                <View
+                  width={20}
+                  height={20}
+                  borderRadius={20}
+                  backgroundColor={colors.primaryAlpha}
+                  alignSelf="flex-start"
+                  justifyContent="center"
+                  alignItems="center">
+                  <Text
+                    text={
+                      last_message_info?.unread > 9
+                        ? '9+'
+                        : last_message_info?.unread.toString()
+                    }
+                    fontSize={11}
+                    color={colors.primary}
+                    textAlign="center"
+                    fontFamily={fonts.primaryFont_700}
+                  />
+                </View>
+              ) : (
+                <Icon
+                  name={
+                    last_message_info?.status === 'U' ? 'tick' : 'double-tick'
+                  }
+                  size={last_message_info?.status === 'U' ? 14 : 24}
+                  style={TICK_STYLE}
+                />
+              )}
+            </>
+          ) : (
             <View
-              width={20}
-              height={20}
-              borderRadius={20}
+              width={26}
+              height={16}
+              borderRadius={4}
               backgroundColor={colors.primaryAlpha}
               alignSelf="flex-start"
               justifyContent="center"
               alignItems="center">
               <Text
-                text={
-                  last_message_info?.unread > 9
-                    ? '9+'
-                    : last_message_info?.unread.toString()
-                }
-                fontSize={11}
+                text={'New'}
+                fontSize={10}
                 color={colors.primary}
                 textAlign="center"
-                fontFamily={fonts.primaryFont_700}
               />
             </View>
-          ) : (
-            <Icon
-              name={last_message_info?.status === 'U' ? 'tick' : 'double-tick'}
-              size={last_message_info?.status === 'U' ? 14 : 24}
-              style={TICK_STYLE}
-            />
           )}
         </View>
       </View>

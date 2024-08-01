@@ -22,11 +22,11 @@ import { useGetUserChats } from 'src/domain/chat';
 import { images } from 'src/assets/images/images';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { SearchUsersModal } from 'src/screens/home/modals';
+import { MutationCache, QueryCache, useQueryClient } from 'react-query';
+import { useMessagesStore } from 'src/store/message/message.store';
 
 // TODO: Mock Data
 import { storiesData } from 'src/_mock/stories';
-import { useMessagesStore } from 'src/store/message/message.store';
-import { MutationCache, QueryCache, useQueryClient } from 'react-query';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors, currentTheme } = useCustomTheme();
