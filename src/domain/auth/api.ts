@@ -19,7 +19,7 @@ export async function registerUser(
   data.append('phone_number', payload.phone_number);
   data.append('email', payload.email);
   data.append('password', payload.password);
-  if (payload.profile_picture?.sourceURL) {
+  if (payload.profile_picture?.path) {
     data.append('profile_picture', {
       uri: payload.profile_picture.path,
       type: payload.profile_picture.mime,

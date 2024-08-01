@@ -276,8 +276,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
           borderRadius={80}>
           <Image
             sourceFile={
-              profilePicture?.sourceURL
-                ? { uri: profilePicture.sourceURL }
+              profilePicture?.path
+                ? { uri: profilePicture.path }
                 : images(currentTheme === 'dark').default_user
             }
             width={110}
