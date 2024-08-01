@@ -68,7 +68,8 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
             if (data.data?.token) {
               updateAuth(data.data);
               successToast({
-                message: 'User Logged in successfully!',
+                title: 'Authentication',
+                message: 'Account created successfully!',
               });
             } else {
               errorToast({

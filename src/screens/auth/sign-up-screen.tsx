@@ -15,7 +15,7 @@ import { useCustomTheme } from 'src/context/theme/interfaces';
 import { RegisterUserRequest, useGetOTP } from 'src/domain/auth';
 import { errorToast, infoToast } from 'src/helpers';
 import validator from 'validator';
-import { Platform, TextStyle } from 'react-native';
+import { TextStyle } from 'react-native';
 import ImagePicker, { ImageOrVideo } from 'react-native-image-crop-picker';
 
 const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
@@ -53,7 +53,10 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
       })
         .then(res => {
           if (res) {
-            setProfilePicture(res);
+            setProfilePicture({
+              ...res,
+              filename: res?.path?.split('/')?.pop(),
+            });
           } else {
             errorToast({
               message: 'Something went wrong!',
@@ -90,12 +93,15 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
         multiple: false,
         includeBase64: false,
         enableRotationGesture: true,
-        forceJpg: false,
+        forceJpg: true,
         mediaType: 'photo',
       })
         .then(res => {
           if (res) {
-            setProfilePicture(res);
+            setProfilePicture({
+              ...res,
+              filename: res?.path?.split('/')?.pop(),
+            });
           } else {
             errorToast({
               message: 'Something went wrong!',
@@ -218,15 +224,7 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
                   password: registerData.password.trim(),
                   phone_number: registerData.phone_number.trim(),
                   user_name: registerData.user_name.trim(),
-                  profile_picture: profilePicture
-                    ? ({
-                        ...profilePicture,
-                        sourceURL:
-                          Platform.OS === 'ios'
-                            ? profilePicture?.sourceURL
-                            : profilePicture?.path,
-                      } as ImageOrVideo)
-                    : null,
+                  profile_picture: profilePicture,
                 },
               });
             } else {
@@ -278,13 +276,8 @@ const SignUpScreen: FunctionComponent = (): React.JSX.Element => {
           borderRadius={80}>
           <Image
             sourceFile={
-              profilePicture
-                ? {
-                    uri:
-                      Platform.OS === 'ios'
-                        ? profilePicture.sourceURL
-                        : profilePicture.path,
-                  }
+              profilePicture?.sourceURL
+                ? { uri: profilePicture.sourceURL }
                 : images(currentTheme === 'dark').default_user
             }
             width={110}

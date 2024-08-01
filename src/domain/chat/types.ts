@@ -5,13 +5,7 @@ export interface CreateChatRequest {
   sender_id: string;
   receiver_id: string;
 }
-export interface CreateChatResponse
-  extends ServerResponse<{
-    members?: string[];
-    _id?: string;
-    createdAt?: string;
-    updatedAt?: string;
-  }> {}
+export interface CreateChatResponse extends ServerResponse<IChat> {}
 
 // Get User Chats
 export interface GetUserChatsRequest extends ServerPaginationRequest {

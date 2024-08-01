@@ -26,6 +26,7 @@ import { SearchUsersModal } from 'src/screens/home/modals';
 // TODO: Mock Data
 import { storiesData } from 'src/_mock/stories';
 import { useMessagesStore } from 'src/store/message/message.store';
+import { MutationCache, QueryCache, useQueryClient } from 'react-query';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors, currentTheme } = useCustomTheme();
@@ -55,6 +56,9 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
     color: colors.inputPLText,
   };
 
+  const queryClient = useQueryClient();
+  const queryCache = new QueryCache();
+  const mutationCache = new MutationCache();
   const log_out = () => {
     Alert.alert('Sign Out?', 'Are you sure you want to log out?', [
       {
@@ -67,6 +71,9 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
           clearAuth();
           clearChats();
           clearMessages();
+          queryCache.clear();
+          mutationCache.clear();
+          queryClient.invalidateQueries();
         },
       },
     ]);

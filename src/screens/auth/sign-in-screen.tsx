@@ -58,6 +58,7 @@ const SignInScreen: FunctionComponent = (): React.JSX.Element => {
             if (data.data?.token) {
               updateAuth(data.data);
               successToast({
+                title: 'Authentication',
                 message: 'User Logged in successfully!',
               });
               setLoginData({

@@ -1,4 +1,9 @@
-import { API_BASE_URL_DEV, API_BASE_URL_PROD } from '@env';
+import {
+  API_BASE_URL_DEV,
+  API_BASE_URL_PROD,
+  API_BASE_URL_DEV_ANDROID,
+} from '@env';
+import { Platform } from 'react-native';
 
 const getEnv = <T>(name: any): T => {
   const value = name;
@@ -10,6 +15,8 @@ const getEnv = <T>(name: any): T => {
 
 export const EnvConfig = {
   baseURL: __DEV__
-    ? getEnv<string>(API_BASE_URL_DEV)
+    ? Platform.OS === 'ios'
+      ? getEnv<string>(API_BASE_URL_DEV)
+      : getEnv<string>(API_BASE_URL_DEV_ANDROID)
     : getEnv<string>(API_BASE_URL_PROD),
 };

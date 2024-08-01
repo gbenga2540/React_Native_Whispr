@@ -51,6 +51,7 @@ export function ChatBox({
       last_message_info?.status === 'R' ? colors.primary : colors.inputPLText,
     marginBottom: last_message_info?.status === 'U' ? 0 : -4,
     marginRight: last_message_info?.status === 'U' ? 0 : -5,
+    alignSelf: 'flex-start',
   };
 
   return (
@@ -58,6 +59,7 @@ export function ChatBox({
       onPress={navToChat}
       flexDirection="row"
       marginTop={7}
+      flex={1}
       marginBottom={10}>
       <View>
         <Image
@@ -87,24 +89,32 @@ export function ChatBox({
             fontFamily={fonts.primaryFont_500}
             fontSize={17}
           />
-          <Text
-            text={timeAgo.format(
-              new Date(last_message_info?.at || '')?.getTime(),
-            )}
-            color={colors.inputPLText}
-            fontSize={12}
-          />
+          {last_message_info?.at && (
+            <Text
+              text={timeAgo.format(
+                new Date(last_message_info?.at || '')?.getTime(),
+              )}
+              color={colors.inputPLText}
+              fontSize={12}
+            />
+          )}
         </View>
 
-        <View flexDirection="row" justifyContent="space-between">
+        <View
+          marginTop={-2}
+          flex={1}
+          alignItems="center"
+          flexDirection="row"
+          justifyContent="space-between">
           <Text
             text={
               last_message_info?.text ||
-              `Send a message to ${recipient_info?.user_name}`
+              `Send a message to ${recipient_info?.full_name}...`
             }
             color={colors.inputPLText}
-            limit={41}
+            limit={90}
             fontSize={14}
+            flex={1}
           />
           {typeof last_message_info?.unread === 'number' &&
           last_message_info?.unread > 0 ? (
@@ -113,6 +123,7 @@ export function ChatBox({
               height={20}
               borderRadius={20}
               backgroundColor={colors.primaryAlpha}
+              alignSelf="flex-start"
               justifyContent="center"
               alignItems="center">
               <Text
