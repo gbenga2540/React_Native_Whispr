@@ -1,7 +1,14 @@
 import React from 'react';
 import { ChatBoxProps } from './chat-box.props';
 import { useCustomTheme } from 'src/context/theme/interfaces';
-import { Icon, Image, Pressable, Text, View } from 'src/components';
+import {
+  Icon,
+  Image,
+  OnlineIndicator,
+  Pressable,
+  Text,
+  View,
+} from 'src/components';
 import { fonts } from 'src/assets/fonts/fonts';
 import { TextStyle } from 'react-native';
 import TimeAgo from 'javascript-time-ago';
@@ -64,24 +71,7 @@ export function ChatBox({
           height={48}
         />
 
-        <View
-          position="absolute"
-          backgroundColor={colors.background}
-          width={16}
-          height={16}
-          borderRadius={16}
-          right={-2}
-          top={-2}
-          justifyContent="center"
-          alignItems="center">
-          <View
-            width={10}
-            height={10}
-            borderRadius={10}
-            children={null}
-            backgroundColor={online ? colors.green : colors.inputPLText}
-          />
-        </View>
+        <OnlineIndicator topOffset={-2} rightOffset={-2} online />
       </View>
 
       <View marginLeft={10} flex={1}>

@@ -57,8 +57,8 @@ const BottomSheet = forwardRef(({ children }: BottomSheetProps, ref) => {
       style={BOTTOM_SHEET}
       ref={sheetRef}
       enablePanDownToClose
-      keyboardBehavior="interactive"
       enableDismissOnClose
+      keyboardBehavior="interactive"
       onAnimate={() => setIsBlur(true)}
       onDismiss={() => setIsBlur(false)}
       index={0}

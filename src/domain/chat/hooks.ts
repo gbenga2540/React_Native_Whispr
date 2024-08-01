@@ -19,7 +19,7 @@ export function useGetUserChats(payload: GetUserChatsRequest) {
       getUserChats({
         user_id: payload.user_id,
         page: pageParam,
-        limit: payload.limit || 10,
+        limit: payload.limit || 20,
       }),
     {
       getNextPageParam: (lastPage, _allPages) => {

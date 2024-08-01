@@ -1,7 +1,6 @@
-// Requests
-export interface GetUserRequest {
-  user_id: string;
+// Get Users
+export interface GetUsersRequest extends ServerPaginationRequest {
+  search: string;
 }
-
-// Response
-export interface GetUserResponse extends ServerResponse<{ user_id: string }> {}
+export interface GetUsersResponse
+  extends ServerResponse<ServerPaginationResponse<Auth['user']>> {}

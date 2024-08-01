@@ -8,6 +8,7 @@ import {
   Icon,
   Image,
   LoadingScreen,
+  OnlineIndicator,
   Pressable,
   Screen,
   Text,
@@ -19,9 +20,10 @@ import { useAuthStore } from 'src/store/auth/auth.store';
 import { useChatsStore } from 'src/store/chat/chat.store';
 import { useGetUserChats } from 'src/domain/chat';
 import { images } from 'src/assets/images/images';
-import { BottomSheetModal, BottomSheetView } from '@gorhom/bottom-sheet';
+import { BottomSheetModal } from '@gorhom/bottom-sheet';
+import { SearchUsersModal } from 'src/screens/home/modals';
 
-// TODO: Test
+// TODO: Mock Data
 import { storiesData } from 'src/_mock/stories';
 import { useMessagesStore } from 'src/store/message/message.store';
 
@@ -33,10 +35,10 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
 
   const { chats: userChats, clearChats } = useChatsStore();
   const { isLoading, fetchNextPage, isFetching, refetch } = useGetUserChats({
-    page: 1,
-    limit: 10,
+    limit: 20,
     user_id: auth?.user?.user_id!,
   });
+
   const [searchChat, setSearchChat] = useState<string>('');
   const filteredChats =
     userChats.filter(
@@ -78,10 +80,9 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   return (
     <Screen preset="fixed">
       <BottomSheet ref={sheetRef}>
-        <BottomSheetView style={{ flex: 1 }}>
-          <Text text="Awesome 🎉" />
-        </BottomSheetView>
+        <SearchUsersModal />
       </BottomSheet>
+
       <View
         marginTop={10}
         marginBottom={4}
@@ -165,24 +166,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
                   resizeMode="cover"
                 />
 
-                <View
-                  position="absolute"
-                  backgroundColor={colors.background}
-                  width={14}
-                  height={14}
-                  borderRadius={14}
-                  right={-4}
-                  top={-4}
-                  justifyContent="center"
-                  alignItems="center">
-                  <View
-                    width={9}
-                    height={9}
-                    borderRadius={9}
-                    children={null}
-                    backgroundColor={true ? colors.green : colors.inputPLText}
-                  />
-                </View>
+                <OnlineIndicator online={story?.viewed} />
               </Pressable>
 
               <Text

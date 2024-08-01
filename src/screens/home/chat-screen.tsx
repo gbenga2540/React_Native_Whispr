@@ -9,6 +9,7 @@ import {
   Image,
   LoadingScreen,
   MessageBox,
+  OnlineIndicator,
   Pressable,
   Screen,
   Text,
@@ -86,26 +87,13 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
             borderRadius={14}
           />
 
-          <View
-            position="absolute"
-            backgroundColor={colors.background}
-            width={14}
-            height={14}
-            borderRadius={14}
-            right={-4}
-            top={-4}
-            justifyContent="center"
-            alignItems="center">
-            <View
-              width={9}
-              height={9}
-              borderRadius={9}
-              children={null}
-              backgroundColor={
-                route_params.online ? colors.green : colors.inputPLText
-              }
-            />
-          </View>
+          <OnlineIndicator
+            online
+            outerSize={14}
+            innerSize={9}
+            topOffset={-2}
+            rightOffset={-2}
+          />
         </Pressable>
 
         <View marginRight={'auto'}>
