@@ -5,6 +5,7 @@ import { Icon, Pressable, Text, View } from 'src/components';
 import TimeAgo from 'javascript-time-ago';
 import { useAuthStore } from 'src/store/auth/auth.store';
 import { TextStyle } from 'react-native';
+import { MessageCipher } from 'src/helpers/crypto/crypto';
 
 const BORDER_RADIUS: number = 10;
 export function MessageBox({
@@ -12,6 +13,8 @@ export function MessageBox({
   createdAt,
   sender_id,
   status,
+  chat_recipient_id,
+  type,
 }: MessageBoxProps): React.JSX.Element {
   const user = useAuthStore().auth;
   const { colors } = useCustomTheme();
@@ -26,6 +29,17 @@ export function MessageBox({
     marginBottom: status === 'U' ? 0 : -4,
     marginRight: status === 'U' ? 0 : -5,
   };
+
+  const messageCipher = new MessageCipher();
+  const cipherKey = messageCipher.generateCipherKey(
+    String(sender_id),
+    is_user ? chat_recipient_id : String(user?.user?.user_id),
+  );
+
+  const deciphered_text =
+    type === 'Text'
+      ? messageCipher.decipherMessage(String(data), cipherKey)
+      : '';
 
   return (
     <Pressable
@@ -46,7 +60,7 @@ export function MessageBox({
         borderBottomRightRadius={is_user ? 0 : BORDER_RADIUS}
         backgroundColor={is_user ? undefined : colors.primary}>
         <Text
-          text={data || ''}
+          text={deciphered_text || ''}
           color={is_user ? colors.grayText : colors.white}
           fontSize={15}
         />

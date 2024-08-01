@@ -148,7 +148,12 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
         <View flex={1}>
           <FlatList
             data={chatMessages}
-            renderItem={({ item }) => <MessageBox {...item} />}
+            renderItem={({ item }) => (
+              <MessageBox
+                {...item}
+                chat_recipient_id={String(route_params.recipient_info?.user_id)}
+              />
+            )}
             keyExtractor={(item, index) => `${item._id} - ${index}`}
             showsVerticalScrollIndicator={false}
             windowSize={8}

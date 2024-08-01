@@ -12,10 +12,12 @@ export interface IChat {
     phone_number?: string;
   };
   last_message_info?: {
-    text?: string;
+    data?: string;
     at?: string;
     unread?: number;
     status?: IMessage['status'];
+    type?: IMessage['type'];
+    sender_id?: IMessage['sender_id'];
   };
   online?: boolean;
 }

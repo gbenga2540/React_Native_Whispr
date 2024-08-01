@@ -15,6 +15,8 @@ import TimeAgo from 'javascript-time-ago';
 import { useNavigation } from '@react-navigation/native';
 import { infoToast } from 'src/helpers';
 import { images } from 'src/assets/images/images';
+import { MessageCipher } from 'src/helpers/crypto/crypto';
+import { useAuth } from 'src/context/auth/interfaces';
 
 export function ChatBox({
   recipient_info,
@@ -25,6 +27,7 @@ export function ChatBox({
   const navigation = useNavigation();
   const { colors, currentTheme } = useCustomTheme();
   const timeAgo = new TimeAgo('en-US');
+  const auth = useAuth().auth;
 
   const navToChat = () => {
     if (chat_id) {
@@ -53,6 +56,22 @@ export function ChatBox({
     marginRight: last_message_info?.status === 'U' ? 0 : -5,
     alignSelf: 'flex-start',
   };
+
+  const messageCipher = new MessageCipher();
+  const is_user: boolean = auth?.user?.user_id === last_message_info?.sender_id;
+
+  const cipherKey = messageCipher.generateCipherKey(
+    String(last_message_info?.sender_id),
+    is_user ? String(recipient_info?.user_id) : String(auth?.user?.user_id),
+  );
+
+  const deciphered_text =
+    last_message_info?.type === 'Text'
+      ? messageCipher.decipherMessage(
+          String(last_message_info?.data),
+          cipherKey,
+        )
+      : '';
 
   return (
     <Pressable
@@ -108,7 +127,7 @@ export function ChatBox({
           justifyContent="space-between">
           <Text
             text={
-              last_message_info?.text ||
+              deciphered_text ||
               `Send a message to ${recipient_info?.full_name}...`
             }
             color={colors.inputPLText}
