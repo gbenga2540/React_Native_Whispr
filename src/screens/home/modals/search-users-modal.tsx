@@ -71,9 +71,9 @@ export function SearchUsersModal() {
 
       {isLoading && usersData?.length === 0 ? (
         <LoadingScreen />
-      ) : usersData?.length > 0 ? (
+      ) : (
         <BottomSheetFlatList
-          data={usersData}
+          data={usersData || []}
           keyExtractor={(item, index) => `${item?.user_id} - ${index}`}
           renderItem={({ item }) => <UserBox user={item} currentUser={auth} />}
           windowSize={8}
@@ -84,15 +84,16 @@ export function SearchUsersModal() {
           refreshing={isFetching}
           onEndReachedThreshold={0.5}
           onEndReached={() => fetchNextPage()}
+          ListEmptyComponent={
+            <BottomSheetView style={EMPTY_VIEW_CONTAINER_STYLE}>
+              <Text
+                text="No Users Found!"
+                fontSize={15}
+                color={colors.inputPLText}
+              />
+            </BottomSheetView>
+          }
         />
-      ) : (
-        <BottomSheetView style={EMPTY_VIEW_CONTAINER_STYLE}>
-          <Text
-            text="No Users Found!"
-            fontSize={15}
-            color={colors.inputPLText}
-          />
-        </BottomSheetView>
       )}
     </BottomSheetView>
   );

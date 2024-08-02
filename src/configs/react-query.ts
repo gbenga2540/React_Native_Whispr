@@ -1,6 +1,8 @@
 import { AxiosError } from 'axios';
 import { QueryClient } from 'react-query';
 import { errorToast, successToast } from 'src/helpers';
+import { remove } from './storage';
+import { strings } from './strings';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,11 +26,12 @@ export const queryClient = new QueryClient({
   },
 });
 
-export function handleErrors(error: AxiosError) {
+export async function handleErrors(error: AxiosError) {
   const message = extractErrorMessage(error);
 
   if (error.status === 401) {
     //TODO: Logout
+    await remove(strings.userToken);
   }
 
   errorToast({

@@ -2,7 +2,7 @@ import { IMessage } from 'src/interface/message';
 
 // Create Message
 export interface CreateMessageRequest
-  extends Pick<IMessage, 'chat_id' | 'sender_id' | 'type' | 'data'> {}
+  extends Pick<IMessage, 'chat_id' | 'type' | 'data'> {}
 export interface CreateMessageResponse extends ServerResponse<string> {}
 
 // Get Chat Messages

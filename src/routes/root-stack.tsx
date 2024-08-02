@@ -3,12 +3,12 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types';
 import AuthStack from './main/auth-stack';
 import AppStack from './main/app-stack';
-import { useAuthStore } from 'src/store/auth/auth.store';
+import { useAuth } from 'src/context/auth/interfaces';
 
 const Root = createNativeStackNavigator<RootStackParamList>();
 
 export default function RootStack(): React.JSX.Element | null {
-  const auth = useAuthStore().auth;
+  const { auth } = useAuth();
   const authStatus: boolean = Boolean(auth?.user?.user_id);
 
   return (

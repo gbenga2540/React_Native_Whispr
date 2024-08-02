@@ -4,7 +4,7 @@ import { GetUsersRequest } from './types';
 
 export function useGetUsers(payload: GetUsersRequest) {
   return useInfiniteQuery(
-    ['getUsers', payload.page, payload.search],
+    ['getUsers', payload.search],
     ({ pageParam = 1 }) =>
       getUsers({
         search: payload.search,

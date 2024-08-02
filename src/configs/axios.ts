@@ -6,7 +6,6 @@ import { EnvConfig } from '../utils/get-env';
 async function useAuthentication(config: InternalAxiosRequestConfig) {
   // set api url
   config.baseURL = EnvConfig.baseURL;
-  // config.baseURL = 'http://10.0.2.2:5000/api/v1';
   const token = await loadString(strings.userToken);
 
   if (token) {

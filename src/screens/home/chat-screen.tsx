@@ -144,10 +144,10 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
 
       {isLoading && chatMessages?.length === 0 ? (
         <LoadingScreen />
-      ) : chatMessages?.length > 0 ? (
+      ) : (
         <View flex={1}>
           <FlatList
-            data={chatMessages}
+            data={chatMessages || []}
             renderItem={({ item }) => (
               <MessageBox
                 {...item}
@@ -161,16 +161,18 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
             maxToRenderPerBatch={8}
             onRefresh={refetch}
             refreshing={false}
+            ListEmptyComponent={
+              <View flex={1} justifyContent="center" alignItems="center">
+                <Text
+                  text="No Messages Found!"
+                  fontSize={15}
+                  color={colors.inputPLText}
+                  marginTop={150}
+                />
+              </View>
+            }
             // onEndReachedThreshold={0.5}
             // onEndReached={() => fetchNextPage()}
-          />
-        </View>
-      ) : (
-        <View flex={1} justifyContent="center" alignItems="center">
-          <Text
-            text="No Messages Found!"
-            fontSize={15}
-            color={colors.inputPLText}
           />
         </View>
       )}

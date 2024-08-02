@@ -2,6 +2,8 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import React, { FunctionComponent, useCallback, useState } from 'react';
 import { fonts } from 'src/assets/fonts/fonts';
 import { Button, OTPField, Screen, Text } from 'src/components';
+import { saveString } from 'src/configs/storage';
+import { strings } from 'src/configs/strings';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { useGetOTP, useRegisterUser, useVerifyOTP } from 'src/domain/auth';
 import { errorToast, successToast } from 'src/helpers';
@@ -57,15 +59,16 @@ const OTPScreen: FunctionComponent = (): React.JSX.Element => {
       await registerUserMutate(
         { ...route_params },
         {
-          onError(error, _variables, _context) {
+          onError: (error, _variables, _context) => {
             errorToast({
               message:
                 (error as any)?.response?.data?.msg ||
                 (error as Error)?.message,
             });
           },
-          onSuccess(data, _variables, _context) {
+          onSuccess: async (data, _variables, _context) => {
             if (data.data?.token) {
+              await saveString(strings.userToken, data.data.token);
               updateAuth(data.data);
               successToast({
                 title: 'Authentication',

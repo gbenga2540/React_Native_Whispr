@@ -9,6 +9,8 @@ import { useChatsStore } from 'src/store/chat/chat.store';
 import { useCreateChat } from 'src/domain/chat';
 import { errorToast, successToast } from 'src/helpers';
 import { useQueryClient } from 'react-query';
+import { images } from 'src/assets/images/images';
+import { useCustomTheme } from 'src/context/theme/interfaces';
 
 export function UserBox({
   user,
@@ -16,6 +18,7 @@ export function UserBox({
 }: UserBoxProps): React.JSX.Element {
   const { isLoading, mutate: createChatMutate } = useCreateChat();
   const queryClient = useQueryClient();
+  const { currentTheme } = useCustomTheme();
   const { chats, updateChats } = useChatsStore();
 
   const chatExist = chats.find(
@@ -26,8 +29,7 @@ export function UserBox({
   const createChat = () => {
     createChatMutate(
       {
-        sender_id: String(currentUser?.user?.user_id),
-        receiver_id: String(user?.user_id),
+        recipient_id: String(user?.user_id),
       },
       {
         onError(error, _variables, _context) {
@@ -88,7 +90,11 @@ export function UserBox({
     <BottomSheetView style={CONTAINER}>
       <BottomSheetView style={IMAGE_WRAPPER}>
         <Image
-          sourceFile={{ uri: user?.profile_picture }}
+          sourceFile={
+            user?.profile_picture
+              ? { uri: user?.profile_picture }
+              : images(currentTheme === 'dark').default_user
+          }
           width={40}
           height={40}
           borderRadius={20}
@@ -103,8 +109,14 @@ export function UserBox({
           fontFamily={fonts.primaryFont_500}
           fontSize={16}
           limit={28}
+          marginBottom={1}
         />
-        <Text text={`@${user?.user_name}` || ''} fontSize={14} limit={34} />
+        <Text
+          text={`@${user?.user_name}` || ''}
+          fontSize={14}
+          limit={34}
+          marginBottom={2}
+        />
         <Text
           text={user?.bio || ''}
           fontFamily={fonts.primaryFont_300}

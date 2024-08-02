@@ -2,8 +2,7 @@ import { IChat } from 'src/interface/chat';
 
 // Create Chat
 export interface CreateChatRequest {
-  sender_id: string;
-  receiver_id: string;
+  recipient_id: string;
 }
 export interface CreateChatResponse extends ServerResponse<IChat> {}
 

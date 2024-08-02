@@ -22,8 +22,9 @@ import { useGetUserChats } from 'src/domain/chat';
 import { images } from 'src/assets/images/images';
 import { BottomSheetModal } from '@gorhom/bottom-sheet';
 import { SearchUsersModal } from 'src/screens/home/modals';
-import { MutationCache, QueryCache, useQueryClient } from 'react-query';
+import { useQueryClient } from 'react-query';
 import { useMessagesStore } from 'src/store/message/message.store';
+import { reset } from 'src/configs/storage';
 
 // TODO: Mock Data
 import { storiesData } from 'src/_mock/stories';
@@ -57,9 +58,8 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   };
 
   const queryClient = useQueryClient();
-  const queryCache = new QueryCache();
-  const mutationCache = new MutationCache();
-  const log_out = () => {
+
+  const logOut = () => {
     Alert.alert('Sign Out?', 'Are you sure you want to log out?', [
       {
         text: 'Cancel',
@@ -67,13 +67,12 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
       },
       {
         text: 'Sign Out',
-        onPress: () => {
+        onPress: async () => {
+          await reset();
           clearAuth();
           clearChats();
           clearMessages();
-          queryCache.clear();
-          mutationCache.clear();
-          queryClient.invalidateQueries();
+          queryClient.clear();
         },
       },
     ]);
@@ -113,7 +112,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
           }
         />
 
-        <Pressable marginLeft={10} onPress={log_out}>
+        <Pressable marginLeft={10} onPress={logOut}>
           <Image
             sourceFile={
               auth?.user?.profile_picture
@@ -208,25 +207,27 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
 
       {isLoading && userChats?.length === 0 ? (
         <LoadingScreen />
-      ) : filteredChats?.length > 0 ? (
+      ) : (
         <ScrollView
           refreshControl={
             <RefreshControl refreshing={isFetching} onRefresh={refetch} />
           }
           onScrollEndDrag={() => fetchNextPage()}
           showsVerticalScrollIndicator={false}>
-          {filteredChats?.map((chat, index) => (
-            <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
-          ))}
+          {(filteredChats || [])?.length > 0 ? (
+            filteredChats?.map((chat, index) => (
+              <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
+            ))
+          ) : (
+            <Text
+              text="No Chats Found!"
+              fontSize={15}
+              color={colors.inputPLText}
+              marginTop={120}
+              alignSelf="center"
+            />
+          )}
         </ScrollView>
-      ) : (
-        <View flex={1} justifyContent="center" alignItems="center">
-          <Text
-            text="No Chats Found!"
-            fontSize={15}
-            color={colors.inputPLText}
-          />
-        </View>
       )}
     </Screen>
   );
