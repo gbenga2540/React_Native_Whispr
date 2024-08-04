@@ -3,9 +3,9 @@ import { MessageBoxProps } from './message-box.props';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { Icon, Pressable, Text, View } from 'src/components';
 import TimeAgo from 'javascript-time-ago';
-import { useAuthStore } from 'src/store/auth/auth.store';
 import { TextStyle } from 'react-native';
-import { MessageCipher } from 'src/helpers/crypto/crypto';
+import MessageCipher from 'src/helpers/crypto/crypto';
+import { useAuth } from 'src/context/auth/interfaces';
 
 const BORDER_RADIUS: number = 10;
 export function MessageBox({
@@ -16,12 +16,19 @@ export function MessageBox({
   chat_recipient_id,
   type,
 }: MessageBoxProps): React.JSX.Element {
-  const user = useAuthStore().auth;
+  const auth = useAuth().auth;
   const { colors } = useCustomTheme();
   const timeAgo = new TimeAgo('en-US');
 
-  const is_user: boolean = user?.user?.user_id === sender_id;
+  const is_user: boolean = auth?.user?.user_id === sender_id;
 
+  const TICK_STYLE_NOT_SENT: TextStyle = {
+    color: colors.inputPLText,
+    alignSelf: 'flex-start',
+    marginLeft: 'auto',
+    marginTop: 3,
+    marginRight: -3,
+  };
   const TICK_STYLE: TextStyle = {
     color: status === 'R' ? colors.primary : colors.inputPLText,
     marginLeft: 'auto',
@@ -30,16 +37,13 @@ export function MessageBox({
     marginRight: status === 'U' ? 0 : -5,
   };
 
-  const messageCipher = new MessageCipher();
-  const cipherKey = messageCipher.generateCipherKey(
-    String(sender_id),
-    is_user ? chat_recipient_id : String(user?.user?.user_id),
+  const cipherKey = MessageCipher.generateCipherKey(
+    sender_id!,
+    is_user ? chat_recipient_id : auth?.user?.user_id!,
   );
 
-  const deciphered_text =
-    type === 'Text'
-      ? messageCipher.decipherMessage(String(data), cipherKey)
-      : '';
+  const decipheredText =
+    type === 'Text' ? MessageCipher.decipherMessage(data!, cipherKey) : '';
 
   return (
     <Pressable
@@ -60,26 +64,36 @@ export function MessageBox({
         borderBottomRightRadius={is_user ? 0 : BORDER_RADIUS}
         backgroundColor={is_user ? undefined : colors.primary}>
         <Text
-          text={deciphered_text || ''}
+          text={decipheredText || ''}
           color={is_user ? colors.grayText : colors.white}
           fontSize={15}
         />
 
-        {is_user && (
-          <Icon
-            name={status === 'U' ? 'tick' : 'double-tick'}
-            size={status === 'U' ? 14 : 24}
-            style={TICK_STYLE}
-          />
-        )}
+        {is_user &&
+          (status === 'N' ? (
+            <Icon
+              name={'not-sent'}
+              size={14}
+              style={TICK_STYLE_NOT_SENT}
+              fill={colors.inputPLText}
+            />
+          ) : (
+            <Icon
+              name={status === 'U' ? 'tick' : 'double-tick'}
+              size={status === 'U' ? 14 : 24}
+              style={TICK_STYLE}
+            />
+          ))}
       </View>
 
-      <Text
-        marginLeft={is_user ? undefined : 'auto'}
-        text={timeAgo.format(new Date(createdAt || ''))}
-        color={colors.inputPLText}
-        fontSize={13}
-      />
+      {createdAt && (
+        <Text
+          marginLeft={is_user ? undefined : 'auto'}
+          text={timeAgo.format(new Date(createdAt || '').getTime())}
+          color={colors.inputPLText}
+          fontSize={13}
+        />
+      )}
     </Pressable>
   );
 }

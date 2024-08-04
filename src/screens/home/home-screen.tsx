@@ -25,13 +25,18 @@ import { SearchUsersModal } from 'src/screens/home/modals';
 import { useQueryClient } from 'react-query';
 import { useMessagesStore } from 'src/store/message/message.store';
 import { reset } from 'src/configs/storage';
+import { useOnlineUsersStore } from 'src/store/online-users/online-users.store';
 
 // TODO: Mock Data
 import { storiesData } from 'src/_mock/stories';
+import { useAuth } from 'src/context/auth/interfaces';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const { colors, currentTheme } = useCustomTheme();
-  const { auth, clearAuth } = useAuthStore();
+  const auth = useAuth().auth;
+  const clearAuth = useAuthStore().clearAuth;
+  const isOnline = useOnlineUsersStore().isOnline;
+  const queryClient = useQueryClient();
 
   const clearMessages = useMessagesStore().clearMessages;
 
@@ -56,8 +61,6 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const ADD_STORY_ICON_STYLE: TextStyle = {
     color: colors.inputPLText,
   };
-
-  const queryClient = useQueryClient();
 
   const logOut = () => {
     Alert.alert('Sign Out?', 'Are you sure you want to log out?', [
@@ -122,6 +125,11 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
             width={31}
             height={31}
             borderRadius={16}
+          />
+          <OnlineIndicator
+            innerSize={8}
+            outerSize={14}
+            online={isOnline(auth?.user?.user_id || '')}
           />
         </Pressable>
       </View>
@@ -216,7 +224,11 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
           showsVerticalScrollIndicator={false}>
           {(filteredChats || [])?.length > 0 ? (
             filteredChats?.map((chat, index) => (
-              <ChatBox key={`${chat.chat_id} - ${index}`} {...chat} />
+              <ChatBox
+                key={`${chat.chat_id} - ${index}`}
+                {...chat}
+                online={isOnline(chat?.recipient_info?.user_id || '')}
+              />
             ))
           ) : (
             <Text

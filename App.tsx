@@ -21,6 +21,7 @@ import { BlurProvider } from 'src/context/blur/blur';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import ToastContainer from 'react-native-toast-message';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
+import { SocketProvider } from 'src/context/socket/socket';
 
 const App: FunctionComponent = () => {
   const queryClient = new QueryClient();
@@ -34,16 +35,18 @@ const App: FunctionComponent = () => {
         <AuthProvider>
           <GestureHandlerRootView style={DEFAULT_CONTAINER}>
             <SafeAreaProvider>
-              <BottomSheetModalProvider>
-                <BlurProvider>
-                  <NavigationContainer
-                    onReady={() =>
-                      Platform.OS === 'android' && SplashScreen.hide()
-                    }>
-                    <RootStack />
-                  </NavigationContainer>
-                </BlurProvider>
-              </BottomSheetModalProvider>
+              <NavigationContainer
+                onReady={() =>
+                  Platform.OS === 'android' && SplashScreen.hide()
+                }>
+                <SocketProvider>
+                  <BottomSheetModalProvider>
+                    <BlurProvider>
+                      <RootStack />
+                    </BlurProvider>
+                  </BottomSheetModalProvider>
+                </SocketProvider>
+              </NavigationContainer>
             </SafeAreaProvider>
           </GestureHandlerRootView>
         </AuthProvider>

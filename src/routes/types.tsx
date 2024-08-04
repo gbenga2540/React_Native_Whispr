@@ -32,7 +32,6 @@ export type HomeStackParamsList = {
   ChatScreen: {
     chat_id: string;
     recipient_info: IChat['recipient_info'];
-    online: boolean;
   };
 };
 

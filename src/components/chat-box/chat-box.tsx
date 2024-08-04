@@ -15,7 +15,7 @@ import TimeAgo from 'javascript-time-ago';
 import { useNavigation } from '@react-navigation/native';
 import { infoToast } from 'src/helpers';
 import { images } from 'src/assets/images/images';
-import { MessageCipher } from 'src/helpers/crypto/crypto';
+import MessageCipher from 'src/helpers/crypto/crypto';
 import { useAuth } from 'src/context/auth/interfaces';
 
 export function ChatBox({
@@ -38,7 +38,6 @@ export function ChatBox({
           params: {
             chat_id: chat_id,
             recipient_info,
-            online: online ?? false,
           },
         },
       });
@@ -49,6 +48,10 @@ export function ChatBox({
     }
   };
 
+  const TICK_STYLE_NOT_SENT: TextStyle = {
+    color: colors.inputPLText,
+    alignSelf: 'flex-start',
+  };
   const TICK_STYLE: TextStyle = {
     color:
       last_message_info?.status === 'R' ? colors.primary : colors.inputPLText,
@@ -57,17 +60,16 @@ export function ChatBox({
     alignSelf: 'flex-start',
   };
 
-  const messageCipher = new MessageCipher();
   const is_user: boolean = auth?.user?.user_id === last_message_info?.sender_id;
 
-  const cipherKey = messageCipher.generateCipherKey(
-    String(last_message_info?.sender_id),
-    is_user ? String(recipient_info?.user_id) : String(auth?.user?.user_id),
+  const cipherKey = MessageCipher.generateCipherKey(
+    last_message_info?.sender_id!,
+    is_user ? recipient_info?.user_id! : auth?.user?.user_id!,
   );
 
   const deciphered_text =
     last_message_info?.type === 'Text'
-      ? messageCipher.decipherMessage(
+      ? MessageCipher.decipherMessage(
           String(last_message_info?.data),
           cipherKey,
         )
@@ -92,7 +94,11 @@ export function ChatBox({
           height={48}
         />
 
-        <OnlineIndicator topOffset={-2} rightOffset={-2} online />
+        <OnlineIndicator
+          topOffset={-2}
+          rightOffset={-2}
+          online={online || false}
+        />
       </View>
 
       <View marginLeft={10} flex={1}>
@@ -159,6 +165,13 @@ export function ChatBox({
                     fontFamily={fonts.primaryFont_700}
                   />
                 </View>
+              ) : last_message_info?.status === 'N' ? (
+                <Icon
+                  name={'not-sent'}
+                  size={14}
+                  style={TICK_STYLE_NOT_SENT}
+                  fill={colors.inputPLText}
+                />
               ) : (
                 <Icon
                   name={

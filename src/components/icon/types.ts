@@ -8,6 +8,7 @@ import close from '../../assets/svg/close.svg';
 import doubleTick from '../../assets/svg/double-tick.svg';
 import gallery from '../../assets/svg/gallery.svg';
 import newConversation from '../../assets/svg/new-conversation.svg';
+import notSent from '../../assets/svg/not-sent.svg';
 import pwdOff from '../../assets/svg/pwd-off.svg';
 import pwdOn from '../../assets/svg/pwd-on.svg';
 import search from '../../assets/svg/search.svg';
@@ -24,6 +25,7 @@ export const ICONS = {
   'double-tick': doubleTick,
   gallery: gallery,
   'new-conversation': newConversation,
+  'not-sent': notSent,
   'pwd-off': pwdOff,
   'pwd-on': pwdOn,
   search: search,

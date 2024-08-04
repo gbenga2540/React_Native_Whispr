@@ -10,10 +10,12 @@ import { Icon, LoadingScreen, Text, UserBox } from 'src/components';
 import { fonts } from 'src/assets/fonts/fonts';
 import { useGetUsers } from 'src/domain/user';
 import { useAuth } from 'src/context/auth/interfaces';
+import { useOnlineUsersStore } from 'src/store/online-users/online-users.store';
 
 export function SearchUsersModal() {
   const { colors } = useCustomTheme();
   const { auth } = useAuth();
+  const isOnline = useOnlineUsersStore().isOnline;
 
   const [userSearch, setUserSearch] = useState<string>('');
   const { isLoading, data, refetch, isFetching, fetchNextPage } = useGetUsers({
@@ -75,7 +77,13 @@ export function SearchUsersModal() {
         <BottomSheetFlatList
           data={usersData || []}
           keyExtractor={(item, index) => `${item?.user_id} - ${index}`}
-          renderItem={({ item }) => <UserBox user={item} currentUser={auth} />}
+          renderItem={({ item }) => (
+            <UserBox
+              user={item}
+              currentUser={auth}
+              online={isOnline(item?.user_id || '')}
+            />
+          )}
           windowSize={8}
           initialNumToRender={8}
           showsVerticalScrollIndicator={false}

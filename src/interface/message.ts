@@ -5,11 +5,12 @@ export enum IMessageType {
   Doc = 'Doc',
 }
 
-// U is unread, D is delivered, R is read
+// U is unread, D is delivered, R is read, N is not sent
 export enum IMessageStatus {
   U = 'U',
   D = 'D',
   R = 'R',
+  N = 'N',
 }
 
 export interface IMessage {

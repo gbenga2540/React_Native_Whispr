@@ -11,17 +11,23 @@ import { errorToast, successToast } from 'src/helpers';
 import { useQueryClient } from 'react-query';
 import { images } from 'src/assets/images/images';
 import { useCustomTheme } from 'src/context/theme/interfaces';
+import { useSocket } from 'src/context/socket/interfaces';
+import { INewChat } from 'src/interface/socket';
+import { useAuth } from 'src/context/auth/interfaces';
 
 export function UserBox({
   user,
   currentUser,
+  online,
 }: UserBoxProps): React.JSX.Element {
   const { isLoading, mutate: createChatMutate } = useCreateChat();
   const queryClient = useQueryClient();
   const { currentTheme } = useCustomTheme();
-  const { chats, updateChats } = useChatsStore();
+  const { chats, addChat } = useChatsStore();
+  const auth = useAuth().auth;
+  const socket = useSocket().socket;
 
-  const chatExist = chats.find(
+  const chatExist = chats.some(
     chat => chat.recipient_info?.user_id === user?.user_id,
   );
   const isUser = user?.user_id === currentUser?.user?.user_id;
@@ -38,9 +44,27 @@ export function UserBox({
               (error as any)?.response?.data?.msg || (error as Error)?.message,
           });
         },
-        onSuccess(data, _variables, _context) {
+        onSuccess(data, variables, _context) {
           if (data.data?.chat_id) {
-            updateChats([...chats, { ...data.data }]);
+            addChat({ ...data.data });
+
+            socket?.emit('add_new_chat', {
+              receiver_id: variables.recipient_id,
+              chat: {
+                chat_id: data.data.chat_id,
+                created_at: data.data.created_at,
+                updated_at: data.data.updated_at,
+                recipient_info: {
+                  bio: auth?.user?.bio,
+                  full_name: auth?.user?.full_name,
+                  phone_number: auth?.user?.phone_number,
+                  profile_picture: auth?.user?.profile_picture,
+                  user_id: auth?.user?.user_id,
+                  user_name: auth?.user?.user_name,
+                },
+              },
+            } as INewChat);
+
             queryClient.cancelQueries([
               ['getUserChats', currentUser?.user?.user_id],
             ]);
@@ -100,7 +124,7 @@ export function UserBox({
           borderRadius={20}
           alignSelf="flex-start"
         />
-        <OnlineIndicator />
+        <OnlineIndicator online={online || false} />
       </BottomSheetView>
 
       <BottomSheetView style={DEFAULT_CONTAINER}>
@@ -128,7 +152,7 @@ export function UserBox({
         preset="link"
         text="Add"
         alignSelf="flex-start"
-        disabled={Boolean(chatExist) || isUser}
+        disabled={chatExist || isUser}
         isLoading={isLoading}
       />
     </BottomSheetView>
