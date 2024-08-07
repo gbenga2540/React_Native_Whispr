@@ -22,7 +22,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import ToastContainer from 'react-native-toast-message';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SocketProvider } from 'src/context/socket/socket';
-import { checkAndRequestNotificationPermission } from 'src/utils/check-permissions';
+import { AndroidNotification } from 'src/utils/check-permissions';
 import instance from 'src/configs/axios';
 
 const App: FunctionComponent = () => {
@@ -40,7 +40,7 @@ const App: FunctionComponent = () => {
     };
 
     preload_svr();
-    checkAndRequestNotificationPermission();
+    AndroidNotification();
   }, []);
 
   return (

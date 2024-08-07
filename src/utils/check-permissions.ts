@@ -1,10 +1,35 @@
 import { Platform } from 'react-native';
-import { requestNotifications } from 'react-native-permissions';
+import {
+  RESULTS,
+  checkNotifications,
+  requestNotifications,
+} from 'react-native-permissions';
 
-export const checkAndRequestNotificationPermission = async () => {
-  if (Platform.OS !== 'android') {
-    return;
-  }
-  requestNotifications(['alert', 'sound']);
-  // .then(({ status, settings }) => {});
+const RequestNotification = () => {
+  requestNotifications([
+    'alert',
+    'sound',
+    'badge',
+    'provisional',
+    'providesAppSettings',
+  ]).then(() => {});
 };
+
+const AndroidNotification = () => {
+  if (Platform.OS === 'android') {
+    checkNotifications().then(({ status }) => {
+      switch (status) {
+        case RESULTS.DENIED:
+          RequestNotification();
+          break;
+        case RESULTS.BLOCKED:
+          RequestNotification();
+          break;
+        default:
+          break;
+      }
+    });
+  }
+};
+
+export { AndroidNotification };
