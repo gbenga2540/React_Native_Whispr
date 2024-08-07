@@ -1,5 +1,11 @@
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
-import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { FlatList, Keyboard, TextStyle } from 'react-native';
 import { fonts } from 'src/assets/fonts/fonts';
 import { images } from 'src/assets/images/images';
@@ -18,36 +24,43 @@ import {
 } from 'src/components';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { HomeStackParamsList } from 'src/routes/types';
-import { useGetChatMessages } from 'src/domain/messages';
 import { useMessagesStore } from 'src/store/message/message.store';
 import { useOnlineUsersStore } from 'src/store/online-users/online-users.store';
 import { useSocket } from 'src/context/socket/interfaces';
 import { IMessage } from 'src/interface/message';
 import { useAuth } from 'src/context/auth/interfaces';
-import { INewMessage } from 'src/interface/socket';
+import { INewMessage, IRequestChatMessages } from 'src/interface/socket';
 import MessageCipher from 'src/helpers/crypto/crypto';
 import { useChatsStore } from 'src/store/chat/chat.store';
+import { useQueryClient } from 'react-query';
 
 const ChatScreen: FunctionComponent = (): React.JSX.Element => {
+  //! MOCK
+  const has_status: boolean = true;
+
   const navigation = useNavigation();
+  const queryClient = useQueryClient();
   const socket = useSocket().socket;
+  const { colors, currentTheme } = useCustomTheme();
   const route = useRoute<RouteProp<HomeStackParamsList, 'ChatScreen'>>();
   const route_params = route.params;
   const isOnline = useOnlineUsersStore().isOnline;
-  const addMessageOffline = useMessagesStore().addMessageOffline;
   const updateChatMessage = useChatsStore().updateChatMessage;
   const auth = useAuth().auth;
+  const { user_messages, updateMessages, isHydrated, addMessageOffline } =
+    useMessagesStore();
 
-  const { user_messages } = useMessagesStore();
-  const { isLoading, refetch } = useGetChatMessages({
-    chat_id: route_params.chat_id,
-  });
-  const chatMessages = user_messages?.[route_params.chat_id];
+  const tempChatMessages = user_messages?.[route_params.chat_id];
+  const chatMessages = useMemo(() => tempChatMessages, [tempChatMessages]);
 
-  const { colors, currentTheme } = useCustomTheme();
+  const cipherKey = MessageCipher.generateCipherKey(
+    auth?.user?.user_id!,
+    route_params?.recipient_info?.user_id!,
+  );
+
   const [newMsg, setNewMsg] = useState<string>('');
-  const has_status: boolean = true;
 
+  // styles
   const ICON_STYLE: TextStyle = {
     color: colors.grayText,
   };
@@ -83,6 +96,8 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
       route_params.chat_id,
       { ...temp_msg, status: 'N' },
       'sending',
+      queryClient,
+      auth?.user?.user_id,
     );
 
     // sent message to server and await a sent response of the actual message
@@ -93,35 +108,6 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
 
     setNewMsg('');
   };
-
-  //! Scroll down to last chat
-  const flatListRef = useRef<FlatList | null>(null);
-  useEffect(() => {
-    const scroll_timer = setTimeout(() => {
-      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
-    }, 100);
-
-    return () => clearTimeout(scroll_timer);
-  }, [chatMessages?.length]);
-
-  useEffect(() => {
-    const keyboardDidShow = Keyboard.addListener('keyboardDidShow', () => {
-      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
-    });
-    const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
-      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
-    });
-
-    return () => {
-      keyboardDidShow.remove();
-      keyboardDidHide.remove();
-    };
-  }, []);
-
-  const cipherKey = MessageCipher.generateCipherKey(
-    auth?.user?.user_id!,
-    route_params?.recipient_info?.user_id!,
-  );
 
   const preSendMessage = (msg: {
     data: IMessage['data'];
@@ -140,6 +126,74 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
       }
     }
   };
+
+  // Scroll down to last chat
+  const flatListRef = useRef<FlatList | null>(null);
+  useEffect(() => {
+    const scroll_timer = setTimeout(() => {
+      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
+    }, 100);
+
+    return () => clearTimeout(scroll_timer);
+  }, [chatMessages?.length]);
+
+  // scroll the FlatList
+  useEffect(() => {
+    const keyboardDidShow = Keyboard.addListener('keyboardDidShow', () => {
+      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
+    });
+    const keyboardDidHide = Keyboard.addListener('keyboardDidHide', () => {
+      flatListRef.current !== null && flatListRef.current?.scrollToEnd();
+    });
+
+    return () => {
+      keyboardDidShow.remove();
+      keyboardDidHide.remove();
+    };
+  }, []);
+
+  // get chat messages using socket
+  useEffect(() => {
+    if (!socket || !isHydrated) {
+      return;
+    }
+
+    const last_created_at: string =
+      [...(chatMessages || [])]?.reverse()?.find(item => item?._id)
+        ?.createdAt || '';
+
+    socket.emit('request_user_messages', {
+      chat_id: route_params.chat_id,
+      from: last_created_at,
+    } as IRequestChatMessages);
+
+    socket.on('get_user_messages', (data: IMessage[]) => {
+      if ((data || [])?.length > 0) {
+        updateMessages(route_params.chat_id, data || []);
+        updateChatMessage(
+          route_params.chat_id,
+          data.sort((a, b) => b?.createdAt!?.localeCompare(a?.createdAt!))?.[0],
+          'receiving',
+          queryClient,
+          auth?.user?.user_id,
+        );
+      }
+    });
+
+    return () => {
+      socket.off('get_user_messages');
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    // socket,
+    isHydrated,
+    // route_params.chat_id,
+    // chatMessages,
+    // updateMessages,
+    // updateChatMessage,
+    // queryClient,
+    // auth?.user?.user_id,
+  ]);
 
   return (
     <Screen preset="fixed">
@@ -235,7 +289,9 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
         />
       </View>
 
-      {isLoading && chatMessages?.length === 0 ? (
+      {/* TODO: add loading */}
+      {/* {isLoading && chatMessages?.length === 0 ? ( */}
+      {!isHydrated || chatMessages?.length === 0 ? (
         <LoadingScreen />
       ) : (
         <View flex={1}>
@@ -253,7 +309,7 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
             windowSize={8}
             initialNumToRender={8}
             maxToRenderPerBatch={8}
-            onRefresh={refetch}
+            // onRefresh={refetch}
             refreshing={false}
             ListEmptyComponent={
               <View flex={1} justifyContent="center" alignItems="center">
@@ -265,8 +321,6 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
                 />
               </View>
             }
-            // onEndReachedThreshold={0.5}
-            // onEndReached={() => fetchNextPage()}
           />
         </View>
       )}

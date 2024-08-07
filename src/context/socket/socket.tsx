@@ -10,10 +10,12 @@ import { useChatsStore } from 'src/store/chat/chat.store';
 import { IMessage } from 'src/interface/message';
 import { useMessagesStore } from 'src/store/message/message.store';
 import { useNavigation } from '@react-navigation/native';
+import { useQueryClient } from 'react-query';
 
 export const SocketProvider: ISocketProvider = function SocketProvider({
   children,
 }) {
+  const navigation = useNavigation();
   const [socket, setSocket] = useState<Socket | null>(null);
   const auth = useAuth().auth;
   const addChat = useChatsStore().addChat;
@@ -21,10 +23,9 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
   const updateOnlineUsers = useOnlineUsersStore().updateOnlineUsers;
   const addMessageOffline = useMessagesStore().addMessageOffline;
   const updateMessages = useMessagesStore().updateMessages;
+  const queryClient = useQueryClient();
 
   const [inChatScreen, setInChatScreen] = useState<boolean>(false);
-
-  const navigation = useNavigation();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('state', e => {
@@ -77,7 +78,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
 
     socket.on('receive_new_chat', (data: IChat) => {
       if (data?.chat_id) {
-        addChat({ ...data });
+        addChat({ ...data }, queryClient, auth?.user?.user_id);
       }
       // TODO: Push Notification
     });
@@ -85,7 +86,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
     return () => {
       socket.off('receive_new_chat');
     };
-  }, [socket, addChat]);
+  }, [socket, addChat, queryClient, auth?.user?.user_id]);
 
   // new message received
   useEffect(() => {
@@ -98,7 +99,14 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
         if (inChatScreen) {
           addMessageOffline(data.chat_id, data);
         }
-        updateChatMessage(data.chat_id!, data, 'receiving');
+        updateChatMessage(
+          data.chat_id!,
+          data,
+          'receiving',
+          queryClient,
+          auth?.user?.user_id,
+        );
+
         // TODO: Push Notification
       }
     });
@@ -106,7 +114,14 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
     return () => {
       socket.off('get_message');
     };
-  }, [socket, addMessageOffline, updateChatMessage, inChatScreen]);
+  }, [
+    socket,
+    addMessageOffline,
+    updateChatMessage,
+    inChatScreen,
+    queryClient,
+    auth?.user?.user_id,
+  ]);
 
   // new message sent to the recipient successfully
   useEffect(() => {
@@ -119,14 +134,27 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
         if (inChatScreen) {
           updateMessages(data.chat_id, [data]);
         }
-        updateChatMessage(data.chat_id, data, 'sending');
+        updateChatMessage(
+          data.chat_id,
+          data,
+          'sending',
+          queryClient,
+          auth?.user?.user_id,
+        );
       }
     });
 
     return () => {
       socket.off('message_sent');
     };
-  }, [socket, updateMessages, updateChatMessage, inChatScreen]);
+  }, [
+    socket,
+    updateMessages,
+    updateChatMessage,
+    inChatScreen,
+    queryClient,
+    auth?.user?.user_id,
+  ]);
 
   return (
     <SocketContext.Provider

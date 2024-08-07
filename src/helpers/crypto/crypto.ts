@@ -101,7 +101,7 @@ export class MessageCipher {
       return '';
     }
 
-    const textMsg = this.JSONParse(message).split('').reverse().join('');
+    const textMsg = this.JSONParse(message)?.split('')?.reverse()?.join('');
 
     if (textMsg) {
       let deciphered_message: string = '';

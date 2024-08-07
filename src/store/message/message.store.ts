@@ -34,7 +34,7 @@ export const useMessagesStore = create<
           return {
             user_messages: {
               ...state.user_messages,
-              [chat_id!]: [...existing_data, message],
+              [chat_id!]: [...existing_data, { ...message }],
             },
           };
         });

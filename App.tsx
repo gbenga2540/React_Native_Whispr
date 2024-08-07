@@ -5,7 +5,7 @@
  * @format
  */
 
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAppState } from './src/hooks/use-app-state';
 import { useOnlineManager } from './src/hooks/use-online-manager';
@@ -22,12 +22,17 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import ToastContainer from 'react-native-toast-message';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SocketProvider } from 'src/context/socket/socket';
+import { checkAndRequestNotificationPermission } from 'src/utils/check-permissions';
 
 const App: FunctionComponent = () => {
   const queryClient = new QueryClient();
 
   useAppState();
   useOnlineManager();
+
+  useEffect(() => {
+    checkAndRequestNotificationPermission();
+  }, []);
 
   return (
     <CustomThemeProvider>

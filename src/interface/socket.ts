@@ -1,3 +1,4 @@
+import { GetUserMessagesRequest } from 'src/domain/messages';
 import { IChat } from './chat';
 import { IMessage } from './message';
 
@@ -15,3 +16,7 @@ export interface INewMessage {
   receiver_id: string;
   message: IMessage;
 }
+
+export interface IRequestChatMessages extends GetUserMessagesRequest {}
+
+export type IMessageStat = 'sending' | 'receiving';

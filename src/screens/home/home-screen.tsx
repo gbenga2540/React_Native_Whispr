@@ -57,7 +57,6 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
   const ICON_STYLE: TextStyle = {
     color: colors.grayText,
   };
-
   const ADD_STORY_ICON_STYLE: TextStyle = {
     color: colors.inputPLText,
   };

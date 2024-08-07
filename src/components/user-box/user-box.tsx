@@ -46,7 +46,7 @@ export function UserBox({
         },
         onSuccess(data, variables, _context) {
           if (data.data?.chat_id) {
-            addChat({ ...data.data });
+            addChat({ ...data.data }, queryClient, auth?.user?.user_id);
 
             socket?.emit('add_new_chat', {
               receiver_id: variables.recipient_id,
@@ -65,13 +65,6 @@ export function UserBox({
               },
             } as INewChat);
 
-            queryClient.cancelQueries([
-              ['getUserChats', currentUser?.user?.user_id],
-            ]);
-            queryClient.invalidateQueries([
-              'getUserChats',
-              currentUser?.user?.user_id,
-            ]);
             successToast({
               title: `@${user?.user_name} added!`,
               message: `You can now chat with @${user?.user_name}`,
