@@ -9,8 +9,9 @@ import { IChat } from 'src/interface/chat';
 import { useChatsStore } from 'src/store/chat/chat.store';
 import { IMessage } from 'src/interface/message';
 import { useMessagesStore } from 'src/store/message/message.store';
-import { useNavigation } from '@react-navigation/native';
+import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from 'react-query';
+import { HomeStackParamsList } from 'src/routes/types';
 
 export const SocketProvider: ISocketProvider = function SocketProvider({
   children,
@@ -25,17 +26,13 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
   const updateMessages = useMessagesStore().updateMessages;
   const queryClient = useQueryClient();
 
-  const [inChatScreen, setInChatScreen] = useState<boolean>(false);
+  const [currentScreen, setCurrentScreen] =
+    useState<NavigatorScreenParams<HomeStackParamsList>>();
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('state', e => {
-      const screen =
-        (e?.data?.state?.routes?.[0]?.params?.params as any)?.screen || '';
-      if (screen === 'ChatScreen') {
-        setInChatScreen(true);
-      } else {
-        setInChatScreen(false);
-      }
+      const screen = e?.data?.state?.routes?.[0]?.params?.params;
+      setCurrentScreen(screen as NavigatorScreenParams<HomeStackParamsList>);
     });
     return unsubscribe;
   }, [navigation]);
@@ -96,7 +93,10 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
 
     socket.on('get_message', (data: IMessage) => {
       if (data?.data) {
-        if (inChatScreen) {
+        if (
+          currentScreen?.screen === 'ChatScreen' &&
+          currentScreen?.params?.chat_id === data?.chat_id
+        ) {
           addMessageOffline(data.chat_id, data);
         }
         updateChatMessage(
@@ -118,7 +118,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
     socket,
     addMessageOffline,
     updateChatMessage,
-    inChatScreen,
+    currentScreen,
     queryClient,
     auth?.user?.user_id,
   ]);
@@ -131,7 +131,10 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
 
     socket.on('message_sent', (data: IMessage) => {
       if (data?.data) {
-        if (inChatScreen) {
+        if (
+          currentScreen?.screen === 'ChatScreen' &&
+          currentScreen?.params?.chat_id === data?.chat_id
+        ) {
           updateMessages(data.chat_id, [data]);
         }
         updateChatMessage(
@@ -151,7 +154,37 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
     socket,
     updateMessages,
     updateChatMessage,
-    inChatScreen,
+    currentScreen,
+    queryClient,
+    auth?.user?.user_id,
+  ]);
+
+  // message read
+  useEffect(() => {
+    if (!socket) {
+      return;
+    }
+
+    socket.on('message_read', (data: IMessage) => {
+      if (data?.data) {
+        updateMessages(data.chat_id, [data]);
+        updateChatMessage(
+          data.chat_id,
+          data,
+          'sending',
+          queryClient,
+          auth?.user?.user_id,
+        );
+      }
+    });
+
+    return () => {
+      socket.off('message_read');
+    };
+  }, [
+    socket,
+    updateMessages,
+    updateChatMessage,
     queryClient,
     auth?.user?.user_id,
   ]);

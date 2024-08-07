@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { MessageBoxProps } from './message-box.props';
 import { useCustomTheme } from 'src/context/theme/interfaces';
 import { Icon, Pressable, Text, View } from 'src/components';
@@ -6,6 +6,8 @@ import TimeAgo from 'javascript-time-ago';
 import { TextStyle } from 'react-native';
 import MessageCipher from 'src/helpers/crypto/crypto';
 import { useAuth } from 'src/context/auth/interfaces';
+import { useSocket } from 'src/context/socket/interfaces';
+import { IMessage } from 'src/interface/message';
 
 const BORDER_RADIUS: number = 10;
 export function MessageBox({
@@ -15,9 +17,13 @@ export function MessageBox({
   status,
   chat_recipient_id,
   type,
+  _id,
+  chat_id,
+  updatedAt,
 }: MessageBoxProps): React.JSX.Element {
   const auth = useAuth().auth;
   const { colors } = useCustomTheme();
+  const socket = useSocket().socket;
   const timeAgo = new TimeAgo('en-US');
 
   const is_user: boolean = auth?.user?.user_id === sender_id;
@@ -44,6 +50,36 @@ export function MessageBox({
 
   const decipheredText =
     type === 'Text' ? MessageCipher.decipherMessage(data!, cipherKey) : '';
+
+  useEffect(() => {
+    if (!socket || status === 'N') {
+      return;
+    }
+
+    if (status !== 'R' && sender_id !== auth?.user?.user_id) {
+      socket.emit('on_message_read', {
+        _id,
+        chat_id,
+        createdAt,
+        data,
+        sender_id,
+        status,
+        type,
+        updatedAt,
+      } as IMessage);
+    }
+  }, [
+    socket,
+    _id,
+    chat_id,
+    createdAt,
+    data,
+    sender_id,
+    status,
+    type,
+    updatedAt,
+    auth?.user?.user_id,
+  ]);
 
   return (
     <Pressable

@@ -26,9 +26,6 @@ import { useQueryClient } from 'react-query';
 import { useMessagesStore } from 'src/store/message/message.store';
 import { reset } from 'src/configs/storage';
 import { useOnlineUsersStore } from 'src/store/online-users/online-users.store';
-
-// TODO: Mock Data
-import { storiesData } from 'src/_mock/stories';
 import { useAuth } from 'src/context/auth/interfaces';
 
 const HomeScreen: FunctionComponent = (): React.JSX.Element => {
@@ -157,7 +154,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
             />
           </View>
 
-          {storiesData.map((story, index) => (
+          {/* {storiesData.map((story, index) => (
             <View marginLeft={10} key={`${story?.user_id} - ${index}`}>
               <Pressable
                 width={56}
@@ -190,7 +187,7 @@ const HomeScreen: FunctionComponent = (): React.JSX.Element => {
                 limit={8}
               />
             </View>
-          ))}
+          ))} */}
         </ScrollView>
       </View>
 

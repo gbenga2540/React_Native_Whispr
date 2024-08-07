@@ -291,7 +291,7 @@ const ChatScreen: FunctionComponent = (): React.JSX.Element => {
 
       {/* TODO: add loading */}
       {/* {isLoading && chatMessages?.length === 0 ? ( */}
-      {!isHydrated || chatMessages?.length === 0 ? (
+      {!isHydrated ? (
         <LoadingScreen />
       ) : (
         <View flex={1}>

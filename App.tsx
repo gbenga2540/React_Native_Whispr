@@ -23,6 +23,7 @@ import ToastContainer from 'react-native-toast-message';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { SocketProvider } from 'src/context/socket/socket';
 import { checkAndRequestNotificationPermission } from 'src/utils/check-permissions';
+import instance from 'src/configs/axios';
 
 const App: FunctionComponent = () => {
   const queryClient = new QueryClient();
@@ -31,6 +32,14 @@ const App: FunctionComponent = () => {
   useOnlineManager();
 
   useEffect(() => {
+    // Wake the server
+    const preload_svr = async () => {
+      try {
+        await instance.get('/');
+      } catch (error) {}
+    };
+
+    preload_svr();
     checkAndRequestNotificationPermission();
   }, []);
 
