@@ -6,7 +6,6 @@ import { IMessage } from 'src/interface/message';
 import { IMessageStat } from 'src/interface/socket';
 import { InfiniteData, QueryClient } from 'react-query';
 import { GetUserChatsResponse } from 'src/domain/chat';
-import { notificationManager } from 'src/services/notification';
 
 type State = {
   chats: IChat[];
@@ -37,12 +36,6 @@ export const useChatsStore = create<
       isHydrated: false,
       addChat: (chat, queryClient, userId) => {
         set(() => {
-          notificationManager.showNotification({
-            id: 1,
-            title: `@${chat.recipient_info?.user_name} is now your friend!`,
-            message: 'Start chatting with them now...',
-          });
-
           if (queryClient && userId) {
             queryClient.invalidateQueries(['getUserChats', userId]);
           }

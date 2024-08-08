@@ -13,6 +13,7 @@ import en from 'javascript-time-ago/locale/en';
 TimeAgo.addDefaultLocale(en);
 
 notificationManager.configure();
+notificationManager.createChannel();
 
 const Root = () => {
   return <App />;

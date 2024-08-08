@@ -12,6 +12,7 @@ import { useMessagesStore } from 'src/store/message/message.store';
 import { NavigatorScreenParams, useNavigation } from '@react-navigation/native';
 import { useQueryClient } from 'react-query';
 import { HomeStackParamsList } from 'src/routes/types';
+import { notificationManager } from 'src/services/notification';
 
 export const SocketProvider: ISocketProvider = function SocketProvider({
   children,
@@ -19,7 +20,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
   const navigation = useNavigation();
   const [socket, setSocket] = useState<Socket | null>(null);
   const auth = useAuth().auth;
-  const addChat = useChatsStore().addChat;
+  const { addChat, chats } = useChatsStore();
   const updateChatMessage = useChatsStore().updateChatMessage;
   const updateOnlineUsers = useOnlineUsersStore().updateOnlineUsers;
   const addMessageOffline = useMessagesStore().addMessageOffline;
@@ -77,6 +78,10 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
       if (data?.chat_id) {
         addChat({ ...data }, queryClient, auth?.user?.user_id);
       }
+      notificationManager.showNotification({
+        title: `@${data.recipient_info?.user_name} is now your friend!`,
+        message: 'Start chatting with them now...',
+      });
       // TODO: Push Notification
     });
 
@@ -99,6 +104,28 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
         ) {
           addMessageOffline(data.chat_id, data);
         }
+
+        // if (
+        //   currentScreen?.screen === 'ChatScreen' &&
+        //   currentScreen?.params?.chat_id !== data?.chat_id &&
+        //   data?.type === 'Text'
+        // ) {
+        //   const chat = chats?.find(ch => ch?.chat_id === data?.chat_id);
+        //   if (chat?.recipient_info?.user_name) {
+        //     const key = MessageCipher.generateCipherKey(
+        //       data.sender_id || '',
+        //       auth?.user?.user_id || '',
+        //     );
+
+        //     if (key !== null) {
+        //       notificationManager.showNotification({
+        //         title: `@${chat?.recipient_info?.user_name} sent you a message!`,
+        //         message: MessageCipher.decipherMessage(data?.data, key),
+        //       });
+        //     }
+        //   }
+        // }
+
         updateChatMessage(
           data.chat_id!,
           data,
@@ -121,6 +148,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
     currentScreen,
     queryClient,
     auth?.user?.user_id,
+    chats,
   ]);
 
   // new message sent to the recipient successfully
@@ -137,6 +165,7 @@ export const SocketProvider: ISocketProvider = function SocketProvider({
         ) {
           updateMessages(data.chat_id, [data]);
         }
+
         updateChatMessage(
           data.chat_id,
           data,
